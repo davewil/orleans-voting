@@ -551,6 +551,21 @@ public class PollTests : TestContext
 
 **⚠️ CHECKPOINT:** Do not proceed until all tests green.
 
+**📝 TODO - Future Refactoring:**
+The Blazor component tests currently pass but have significant quality issues:
+- **Setup complexity**: Each test requires extensive DI container configuration
+- **Poor intent communication**: Setup boilerplate obscures what's actually being tested
+- **Maintenance burden**: Changes to dependencies require updating setup in multiple tests
+
+**Recommended improvements (future work):**
+1. Create a test facade/builder pattern to encapsulate common setup
+2. Consider test-specific base classes that pre-configure common dependencies
+3. Explore bUnit's built-in dependency injection helpers to reduce boilerplate
+4. Extract setup logic into helper methods with descriptive names
+5. Consider whether we need to test DI wiring or just component behavior
+
+**Goal:** Tests should clearly communicate what behavior is being verified without drowning in infrastructure setup.
+
 ---
 
 ### Step 1.5: Add Integration Smoke Tests
