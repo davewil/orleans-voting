@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet new:*)",
+      "Bash(dotnet add package:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet add package Moq)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet list OrleansVoting.Service/OrleansVoting.Service.csproj package --outdated)",
+      "Bash(dotnet list OrleansVoting.AppHost/OrleansVoting.AppHost.csproj package --outdated)",
+      "Bash(dotnet list OrleansVoting.ServiceDefaults/OrleansVoting.ServiceDefaults.csproj package --outdated)",
+      "Bash(dotnet --list-sdks)",
+      "Bash(\"C:\\Program Files\\dotnet\\dotnet.exe\" test)",
+      "Bash(export DOTNET_ROOT=\"C:\\Program Files\\dotnet\")",
+      "Bash(export PATH=\"C:\\Program Files\\dotnet:$PATH\")",
+      "Bash(\"C:\\Program Files\\dotnet\\dotnet.exe\" clean)",
+      "Bash(export DOTNET_MULTILEVEL_LOOKUP=1)",
+      "Bash(\"C:\\Program Files\\dotnet\\dotnet.exe\" test --no-build)",
+      "Bash(git add -A)",
+      "Bash(git reset)",
+      "Bash(git add .gitignore .claude/ CLAUDE.md MIGRATION_PLAN.md README.md global.json OrleansVoting.sln OrleansVoting.AppHost/ OrleansVoting.Service/ OrleansVoting.ServiceDefaults/ OrleansVoting.Tests/)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
