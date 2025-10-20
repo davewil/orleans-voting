@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OrleansVoting.Service\OrleansVoting.Service.csproj" />
     <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
+    <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
   </ItemGroup>
 
 </Project>
