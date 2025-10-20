@@ -1122,6 +1122,10 @@ dotnet test
 - ✅ Application runs with hybrid architecture
 - ✅ Grains can activate on either Service or Silo instances
 
+**Status:** ✅ **COMPLETE** (2025-10-20)
+
+**Note:** One flaky integration test (`RealTimeUpdates_ObserverReceivesNotification`) may occasionally fail due to timing. This is a pre-existing issue not related to this step.
+
 ---
 
 ## Phase 5: Convert Service to Client-Only WebApp
