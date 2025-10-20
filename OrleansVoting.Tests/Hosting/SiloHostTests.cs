@@ -1,10 +1,13 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Hosting;
+using Xunit;
 using OrleansVoting.Contracts.Grains;
-using OrleansVoting.Grains;
 
 namespace OrleansVoting.Tests.Hosting;
 
@@ -15,10 +18,10 @@ public class SiloHostTests
     {
         // Arrange
         var builder = Host.CreateApplicationBuilder();
+        builder.Logging.SetMinimumLevel(LogLevel.Warning);
         builder.UseOrleans(silo =>
         {
             silo.UseLocalhostClustering();
-            // Grains are auto-discovered from referenced assemblies
         });
 
         var host = builder.Build();
@@ -39,11 +42,11 @@ public class SiloHostTests
     {
         // Arrange
         var builder = Host.CreateApplicationBuilder();
+        builder.Logging.SetMinimumLevel(LogLevel.Warning);
         builder.UseOrleans(silo =>
         {
             silo.UseLocalhostClustering();
             silo.AddMemoryGrainStorage("votes");
-            // Grains are auto-discovered from referenced assemblies
         });
 
         var host = builder.Build();
