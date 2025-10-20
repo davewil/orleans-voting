@@ -51,3 +51,50 @@ dotnet run --project OrleansVoting.AppHost
 
 For more information about using Orleans, see the [Orleans documentation](https://learn.microsoft.com/dotnet/orleans).
 
+
+## Production deployment notes: required environment variables
+
+When deploying this sample to production (outside of the local Aspire developer orchestrator), set the following environment variables so the Silo and the Service can discover the cluster and Redis correctly. These map directly to configuration keys consumed in `OrleansVoting.Silo/Program.cs` and `OrleansVoting.Service/AppHost.cs`.
+
+Required for both Silo and Service:
+
+- Connection string for Redis (clustering, and storage on Silo):
+    - Environment: `ConnectionStrings__voting-redis`
+    - Example: `ConnectionStrings__voting-redis=redis:6380,password=...;ssl=True;abortConnect=False`
+    - Used by: `builder.Configuration.GetConnectionString("voting-redis")`
+
+- Orleans Cluster identity (must match across Silo and Service):
+    - `Orleans__ClusterOptions__ClusterId` (default: `voting-cluster`)
+    - `Orleans__ClusterOptions__ServiceId` (default: `voting-app`)
+    - Used by: `ClusterOptions.ClusterId` and `ClusterOptions.ServiceId`
+
+Silo-specific:
+
+- Grain storage provider uses Redis via the same connection string. No extra env var is required beyond `ConnectionStrings__voting-redis`.
+
+Service-specific:
+
+- None beyond the shared variables above.
+
+Aspire AppHost (if you run orchestration in non-dev):
+
+- The AppHost’s launch profiles already set the dashboard endpoints for development. If running AppHost without launch profiles, you must set at least one of:
+    - `ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL` (gRPC) or `ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL` (HTTP)
+    - And ensure ASP.NET Core binding is configured via `ASPNETCORE_URLS` if not using a launch profile.
+
+General ASP.NET Core hosting:
+
+- `ASPNETCORE_URLS` to bind Kestrel in container/VM scenarios, for example: `ASPNETCORE_URLS=http://0.0.0.0:8080`
+- `DOTNET_ENVIRONMENT` or `ASPNETCORE_ENVIRONMENT` as needed (`Production` recommended)
+
+Containerization tips:
+
+- Set the above environment variables in your orchestrator (Docker Compose, Kubernetes, App Service), and mount them for both the Silo and the Service.
+- Ensure network connectivity from Service to the Orleans gateways (Silo). Since clustering uses Redis, both must reach the Redis endpoint specified by `ConnectionStrings__voting-redis`.
+- Keep `ClusterId` and `ServiceId` consistent across all deployments to join the same cluster. Use unique values per environment (e.g., `voting-cluster-prod`).
+
+Security & secrets:
+
+- Do not hardcode credentials in `appsettings.json`. Prefer environment variables or your platform’s secret store (e.g., Azure App Configuration/Key Vault, Kubernetes Secrets).
+- If using managed services (e.g., Azure Cache for Redis), use TLS and rotate keys regularly.
+

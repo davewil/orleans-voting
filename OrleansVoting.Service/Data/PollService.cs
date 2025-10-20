@@ -28,9 +28,7 @@ public sealed partial class PollService(IGrainFactory grainFactory)
         var pollGrain = grainFactory.GetGrain<IPollGrain>(pollId);
         var watcherReference = grainFactory.CreateObjectReference<IPollWatcher>(watcherObject);
         var result = new PollWatcherSubscription(watcherObject, pollGrain, watcherReference);
-
-        await ValueTask.CompletedTask;
-        
+        await result.InitializeAsync();
         return result;
     }
 }

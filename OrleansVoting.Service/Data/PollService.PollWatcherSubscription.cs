@@ -9,23 +9,31 @@ public sealed partial class PollService
     {
         private readonly CancellationTokenSource _cancellation = new();
         private readonly WeakReference _watcher;
-        private readonly Task _watcherTask;
+        private Task? _watcherTask;
         private readonly IPollGrain _pollGrain;
         private readonly IPollWatcher _watcherReference;
+        private readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
         
         public PollWatcherSubscription(IPollWatcher watcher, IPollGrain pollGrain, IPollWatcher watcherReference)
         {
             _pollGrain = pollGrain;
             _watcher = new WeakReference(watcher);
             _watcherReference = watcherReference;
-            _watcherTask = Task.Run(WatchPoll);
         }
 
-        private async Task WatchPoll()
+        public async Task InitializeAsync()
+        {
+            // Establish the subscription before returning to caller
+            await _pollGrain.StartWatching(_watcherReference);
+            _started.TrySetResult();
+
+            // Start background refresh loop
+            _watcherTask = Task.Run(WatchLoop);
+        }
+
+        private async Task WatchLoop()
         {
             using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
-
-            await _pollGrain.StartWatching(_watcherReference);
             while (await timer.WaitForNextTickAsync(_cancellation.Token))
             {
                 // When the client disconnects, the .NET garbage collector can clean up the watcher object.
@@ -58,7 +66,10 @@ public sealed partial class PollService
             _cancellation.Cancel();
             try
             {
-                await _watcherTask;
+                if (_watcherTask is not null)
+                {
+                    await _watcherTask;
+                }
             }
             catch
             {
@@ -67,5 +78,7 @@ public sealed partial class PollService
 
             _cancellation.Dispose();
         }
+
+        public Task WaitUntilStartedAsync() => _started.Task;
     }
 }
