@@ -6,7 +6,11 @@ builder.AddServiceDefaults();
 
 builder.AddKeyedRedisClient("voting-redis");
 
-builder.UseOrleans();
+// Configure as Orleans client (no grain hosting)
+builder.UseOrleansClient(client =>
+{
+    // Clustering configuration will come from Aspire via .WithReference(orleans)
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();

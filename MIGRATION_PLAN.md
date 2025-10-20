@@ -1267,9 +1267,26 @@ git branch backup/service-with-silo
 
 ---
 
-### Step 5.4: Update Service to Use Client Configuration
+### Step 5.4: Update Service to Use Client Configuration ✅ (2025-10-20)
 
 **Purpose:** Change Service to connect as client instead of hosting silos.
+
+**Changes Made:**
+
+1. **Updated OrleansVoting.Service/AppHost.cs:**
+   - Changed from `builder.UseOrleans()` to `builder.UseOrleansClient(client => { })`
+   - Service now connects as Orleans client, does not host grains
+
+2. **Updated OrleansVoting.Service.csproj:**
+   - Removed Orleans server packages: `Microsoft.Orleans.Server`, `Microsoft.Orleans.Clustering.Redis`, `Microsoft.Orleans.Persistence.Redis`
+   - Removed Grains project reference - Service only references Contracts for grain interfaces
+   - Service is now pure client, cannot host grain implementations
+
+**Verification:**
+- ✅ Service builds successfully
+- ✅ All tests pass (29 total, 1 known flaky timing test)
+- ✅ Service no longer depends on Grains project
+- ✅ Clean separation: Service = client, Silo = grain hosting
 
 **Update OrleansVoting.Service/AppHost.cs:**
 

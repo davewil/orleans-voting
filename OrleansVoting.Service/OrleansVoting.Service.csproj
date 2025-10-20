@@ -8,16 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.StackExchange.Redis" Version="9.5.1" />
-
-    <PackageReference Include="Microsoft.Orleans.Clustering.Redis" Version="9.2.1" />
-    <PackageReference Include="Microsoft.Orleans.Persistence.Redis" Version="9.2.1" />
-    <PackageReference Include="Microsoft.Orleans.Server" Version="9.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OrleansVoting.ServiceDefaults\OrleansVoting.ServiceDefaults.csproj" />
     <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
-    <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
   </ItemGroup>
 
 </Project>
