@@ -1,0 +1,2264 @@
+
+╭─── Claude Code v2.0.10 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting started                                                                              │
+│                 Welcome back David!                │ Run /install-github-app to tag @claude right from your Github issues and PRs                          │
+│                                                    │ ✔ Run /init to create a CLAUDE.md file with instructions for Claude                                   │
+│                       ▐▛███▜▌                      │ ────────────────────────────────────────────────────────────────────────────                          │
+│                      ▝▜█████▛▘                     │ Recent activity                                                                                       │
+│                        ▘▘ ▝▝                       │ No recent activity                                                                                    │
+│                                                    │                                                                                                       │
+│               Sonnet 4.5 · Claude Pro              │                                                                                                       │
+│  D:\work\.net\aspire-samples\samples\OrleansVoting │                                                                                                       │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+> /init is analyzing your codebase… 
+
+● I'll analyze the codebase to create a comprehensive CLAUDE.md file for this Orleans Voting sample application.
+
+● Read(README.md)
+  ⎿  Read 54 lines (ctrl+o to expand)
+
+● Search(pattern: "*.csproj")
+  ⎿  Found 0 files 
+
+● Search(pattern: "*.sln")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Read(.cursorrules)
+  ⎿  Error reading file
+
+● Read(.github\copilot-instructions.md)
+  ⎿  Error reading file
+
+● Bash(find . -name "*.csproj" -type f)
+  ⎿  ./OrleansVoting.AppHost/OrleansVoting.AppHost.csproj                
+     ./OrleansVoting.Service/OrleansVoting.Service.csproj
+     ./OrleansVoting.ServiceDefaults/OrleansVoting.ServiceDefaults.csproj
+
+● Read(OrleansVoting.sln)
+  ⎿  Read 42 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.AppHost\OrleansVoting.AppHost.csproj)
+  ⎿  Read 23 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\OrleansVoting.Service.csproj)
+  ⎿  Read 22 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.ServiceDefaults\OrleansVoting.ServiceDefaults.csproj)
+  ⎿  Read 24 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.AppHost\Program.cs)
+  ⎿  Error reading file
+
+● Search(pattern: "OrleansVoting.Service/**/*.cs")
+  ⎿  Found 23 files (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\AppHost.cs)
+  ⎿  Read 28 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Startup.cs)
+  ⎿  Read 12 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Grains\PollGrain.cs)
+  ⎿  Read 54 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Grains\IPollGrain.cs)
+  ⎿  Read 18 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Data\PollService.cs)
+  ⎿  Read 36 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Grains\UserAgentGrain.cs)
+  ⎿  Read 101 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Grains\VoteGrain.cs)
+  ⎿  Read 68 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.ServiceDefaults\Extensions.cs)
+  ⎿  Read 113 lines (ctrl+o to expand)
+
+● Bash(find . -name "Program.cs" -o -name "*.razor" | grep -v obj | head -10)
+  ⎿  ./OrleansVoting.Service/App.razor        
+     ./OrleansVoting.Service/Pages/Index.razor
+     ./OrleansVoting.Service/Pages/Poll.razor
+     … +4 lines (ctrl+o to expand)
+
+● Search(pattern: "OrleansVoting.AppHost/*.cs")
+  ⎿  Found 1 file (ctrl+o to expand)
+
+● Read(OrleansVoting.AppHost\AppHost.cs)
+  ⎿  Read 16 lines (ctrl+o to expand)
+
+● Now I'll create the CLAUDE.md file with the essential information about this codebase:
+
+● Write(CLAUDE.md)
+  ⎿  Wrote 1 lines to CLAUDE.md                                                                                                                          
+     # CLAUDE.md
+     This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+     ## Overview
+     Orleans Voting is a sample application demonstrating Orleans distributed actor framework integration with .NET Aspire orchestration. It implements a
+     real-time voting application with persistence and clustering backed by Redis.
+     ## Common Commands
+
+● CLAUDE.md file created successfully. The file provides:
+
+  1. Common Commands: Build, run, and restore commands specific to this Aspire/Orleans application
+  2. Architecture Overview:
+    - 3-project structure (AppHost, Service, ServiceDefaults)
+    - Orleans grain model with detailed explanation of the 3 grain types
+    - Data flow through the application
+    - Redis integration for clustering and persistence
+    - Key Orleans patterns used in the codebase
+    - Aspire integration points
+
+  The documentation focuses on the non-obvious architectural patterns that require reading multiple files to understand, such as the grain interaction
+  model, the observer pattern for real-time updates, and how Aspire orchestrates Orleans with Redis.
+
+> Ok, what I don't like about this codebase is a lack of appropriate testing. Either the Orleans side of things, or the flow of the WebApp itself and the 
+testing of the Blazor based website. Can you write plans on how these would both best be covered by appropriate levels of tests. 
+
+● Search(pattern: "**/*Test*.csproj")
+  ⎿  Found 0 files 
+
+● Search(pattern: "**/test/**/*.csproj")
+  ⎿  Found 0 files 
+
+● Read(OrleansVoting.Service\Pages\Poll.razor)
+  ⎿  Read 153 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Pages\Index.razor)
+  ⎿  Read 11 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Pages\PollEditor.razor)
+  ⎿  Read 81 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Data\DemoService.cs)
+  ⎿  Read 37 lines (ctrl+o to expand)
+
+● Read(OrleansVoting.Service\Grains\IPollWatcher.cs)
+  ⎿  Read 7 lines (ctrl+o to expand)
+
+● I'll analyze the codebase and create comprehensive test plans for both areas:
+
+  Orleans Grain Testing Plan
+
+  Test Project Structure
+
+  - OrleansVoting.Grains.Tests - Unit and integration tests for grain logic
+  - OrleansVoting.Integration.Tests - End-to-end Orleans cluster tests
+
+  Testing Layers
+
+  1. Grain Unit Tests (using Orleans TestCluster)
+
+  Tools Required:
+  - Microsoft.Orleans.TestingHost - Provides in-memory test cluster
+  - xUnit or NUnit - Test framework
+  - FluentAssertions - Assertion library
+
+  PollGrain Tests:
+  - CreatePoll_ValidState_PersistsCorrectly
+  - AddVote_ValidOption_IncrementsVoteCount
+  - AddVote_InvalidOptionId_ThrowsKeyNotFoundException
+  - AddVote_NotifiesAllObservers
+  - GetCurrentResults_ReturnsPersistedState
+  - StartWatching_RegistersObserver
+  - StopWatching_UnregistersObserver
+  - ObserverCleanup_AfterTimeout_RemovesStaleObservers
+
+  UserAgentGrain Tests:
+  - CreatePoll_FirstPoll_ReturnsValidPollId
+  - CreatePoll_SixthPoll_ThrowsInvalidOperationException
+  - AddVote_FirstVote_Succeeds
+  - AddVote_DoubleVote_ThrowsInvalidOperationException
+  - GetPollResults_TracksVotedStatus
+  - Throttling_RapidRequests_ThrowsThrottlingException
+  - Throttling_DecayOverTime_AllowsRequestsAfterDelay
+  - Throttling_ScoreCalculation_DecaysCorrectly
+
+  VoteGrain Tests:
+  - AddVote_NewOption_CreatesEntry
+  - AddVote_ExistingOption_IncrementsCount
+  - RemoveVote_ExistingOption_RemovesEntry
+  - RemoveVote_MissingOption_ThrowsKeyNotFoundException
+  - Get_ReturnsAllVotes
+  - CaseInsensitive_HandlingWorksCorrectly
+
+  2. Grain Persistence Tests
+
+  Redis Storage Integration:
+  - PollState_Persists_AcrossGrainActivations
+  - VoteState_Persists_AcrossGrainActivations
+  - StateLoad_CorruptedData_HandlesGracefully
+  - ConcurrentWrites_LastWriteWins
+  - StateClear_RemovesPersistedData
+
+  Test Pattern:
+  // Deactivate grain, reactivate, verify state restored
+  var grain = cluster.GrainFactory.GetGrain<IPollGrain>("test-id");
+  await grain.CreatePoll(state);
+  // Force deactivation
+  await cluster.Client.GetGrain<IManagementGrain>(0)
+      .ForceGarbageCollection(new[] { grain.GetPrimaryKey() });
+  // Reactivate and verify
+  var restoredGrain = cluster.GrainFactory.GetGrain<IPollGrain>("test-id");
+  var results = await restoredGrain.GetCurrentResults();
+  // Assert state matches
+
+  3. Observer Pattern Tests
+
+  - MultipleObservers_OnVote_AllReceiveNotification
+  - ObserverUnsubscribe_DoesNotReceiveUpdates
+  - ObserverTimeout_AutomaticallyRemoved
+  - ConcurrentVotes_ObserversReceiveAllUpdates
+  - ObserverException_DoesNotAffectOtherObservers
+
+  4. Clustering & Failover Tests
+
+  - GrainActivation_AcrossDifferentSilos
+  - GrainMigration_AfterSiloShutdown
+  - PollState_PreservedDuringMigration
+  - MultipleReplicas_HandleConcurrentRequests
+
+  5. Integration Tests with Full Stack
+
+  - EndToEnd_CreatePollAndVote_WorksAcrossSilos
+  - LoadTest_1000ConcurrentVoters_HandlesCorrectly
+  - UserAgentGrain_IsolatesUsersByIP
+  - RealRedis_PersistenceWorks (optional, tagged [Integration])
+
+  ---
+  Blazor Web Application Testing Plan
+
+  Test Project Structure
+
+  - OrleansVoting.Service.Tests - Component and service tests
+  - OrleansVoting.E2E.Tests - End-to-end Playwright tests
+
+  Testing Layers
+
+  1. Service Layer Unit Tests (with Mocked Grains)
+
+  Tools Required:
+  - xUnit - Test framework
+  - Moq or NSubstitute - Mocking framework
+  - FluentAssertions - Assertions
+
+  PollService Tests:
+  - Initialize_SetsUserAgentGrain
+  - CreatePollAsync_CallsUserAgentGrain_ReturnsValidPollId
+  - GetPollResultsAsync_ReturnsStateAndVotedStatus
+  - AddVoteAsync_CallsUserAgentGrain_ReturnsUpdatedState
+  - WatchPoll_CreatesObserverReference
+  - WatchPoll_SubscriptionDispose_UnsubscribesCorrectly
+
+  DemoService Tests:
+  - SimulateVoters_CallsAddVoteMultipleTimes
+  - SimulateVoters_HandlesExceptions_LogsErrors
+  - SimulateVoters_RandomDelays_BetweenVotes
+
+  2. Blazor Component Tests (using bUnit)
+
+  Tools Required:
+  - bUnit - Blazor component testing library
+  - bUnit.web - Additional web testing utilities
+
+  PollEditor.razor Tests:
+  - Render_DisplaysForm
+  - AddOption_WithValidInput_AddsToList
+  - AddOption_WithEmptyInput_DoesNotAdd
+  - DeleteOption_RemovesFromList
+  - RenameOption_UpdatesCorrectOption
+  - CreatePoll_WithValidData_NavigatesToPollPage
+  - CreatePoll_WithoutQuestion_DoesNotSubmit
+  - DemoAutofill_PopulatesAllFields
+
+  Poll.razor Tests:
+  - OnInitialized_LoadsPollResults
+  - OnInitialized_WithError_DisplaysErrorMessage
+  - BeforeVoting_DisplaysVoteButtons
+  - VoteForOption_UpdatesStateToVoted
+  - VoteForOption_WithError_DisplaysErrorMessage
+  - AfterVoting_DisplaysResults
+  - CalculateResults_WithZeroVotes_HandlesCorrectly
+  - CalculateResults_ShowsCorrectPercentages
+  - ObserverUpdate_TriggersUIRefresh
+  - DemoSimulateVoters_CallsDemoService
+  - DemoTryDoubleVoting_ResetsVotedState
+  - Dispose_UnsubscribesFromObserver
+
+  Component Test Pattern:
+  [Fact]
+  public void VoteForOption_UpdatesStateToVoted()
+  {
+      // Arrange
+      using var ctx = new TestContext();
+      var mockPollService = new Mock<PollService>();
+      mockPollService.Setup(x => x.GetPollResultsAsync(It.IsAny<string>()))
+          .ReturnsAsync((pollState, false));
+      ctx.Services.AddSingleton(mockPollService.Object);
+
+      // Act
+      var cut = ctx.RenderComponent<Poll>(parameters =>
+          parameters.Add(p => p.PollId, "test123"));
+      var button = cut.Find("button.btn-outline-secondary");
+      button.Click();
+
+      // Assert
+      cut.WaitForState(() => cut.Instance._voted);
+      mockPollService.Verify(x => x.AddVoteAsync("test123", 0), Times.Once);
+  }
+
+  3. Integration Tests (using WebApplicationFactory)
+
+  Tools Required:
+  - Microsoft.AspNetCore.Mvc.Testing - Test host
+  - Aspire.Hosting.Testing - Aspire test support (if available)
+
+  Service Integration Tests:
+  - FullFlow_CreatePollAndVote_WithRealOrleans
+  - HttpClient_AccessPollPage_Returns200
+  - BlazorCircuit_Maintains_DuringObserverUpdates
+  - ServiceDefaults_HealthChecks_Return200
+  - OpenTelemetry_TraceGeneration_WorksCorrectly
+
+  Test Pattern:
+  public class WebAppIntegrationTests : IClassFixture<WebApplicationFactory<AppHost>>
+  {
+      private readonly WebApplicationFactory<AppHost> _factory;
+
+      [Fact]
+      public async Task CreatePoll_EndToEnd_Success()
+      {
+          // Arrange - use TestCluster for Orleans
+          var client = _factory.CreateClient();
+
+          // Act - simulate Blazor interactions via HttpClient
+          // Assert - verify state changes
+      }
+  }
+
+  4. End-to-End Tests (using Playwright)
+
+  Tools Required:
+  - Microsoft.Playwright - Browser automation
+  - Microsoft.Playwright.NUnit or xUnit integration
+
+  E2E Test Scenarios:
+  - UserJourney_CreatePollVoteAndSeeResults
+  - MultipleUsers_VotingConcurrently_AllVotesCount
+  - RealTimeUpdates_SecondUserVotes_FirstUserSeesUpdate
+  - Throttling_RapidClicks_ShowsErrorMessage
+  - DoubleVoting_ShowsErrorMessage
+  - Navigation_IndexRedirectsToPollEditor
+  - PollSharing_CorrectUrlGenerated
+  - MobileView_AllFeaturesWork
+  - DemoButtons_FunctionCorrectly
+
+  E2E Test Pattern:
+  [Test]
+  public async Task UserJourney_CreatePollVoteAndSeeResults()
+  {
+      await Page.GotoAsync(BaseUrl);
+      await Page.FillAsync("#pollTitle", "Test Poll");
+      await Page.FillAsync("input[placeholder='Option value']", "Option 1");
+      await Page.ClickAsync("button:has-text('Add')");
+      await Page.ClickAsync("button:has-text('Create')");
+
+      await Expect(Page).ToHaveURLAsync(new Regex("/p/[a-z0-9]{6}"));
+
+      await Page.ClickAsync("button.btn-outline-secondary >> nth=0");
+      await Expect(Page.Locator(".progress-bar")).ToBeVisibleAsync();
+  }
+
+  5. Blazor Server Circuit Tests
+
+  - SignalRConnection_Maintains_DuringLongPolling
+  - CircuitDisconnect_ReconnectsCorrectly
+  - ObserverCallback_InvokesOnUIThread
+  - StateHasChanged_TriggersRerender
+  - ComponentDisposal_CleansUpObservers
+
+  ---
+  Test Infrastructure Requirements
+
+  Shared Test Utilities
+
+  - TestClusterBuilder configuration helper
+  - Mock grain factory
+  - Test Redis container (Testcontainers.Redis)
+  - Fake clock for throttling tests
+  - Observer spy/mock implementation
+
+  CI/CD Considerations
+
+  - Fast unit tests run on every commit
+  - Integration tests run on PR
+  - E2E tests run nightly or pre-release
+  - Redis container lifecycle in CI
+  - Parallel test execution strategy
+
+  Code Coverage Goals
+
+  - Grain logic: 90%+ coverage
+  - Service layer: 85%+ coverage
+  - Blazor components: 75%+ coverage (UI logic)
+  - Overall: 80%+ coverage
+
+  ---
+  This comprehensive testing strategy ensures reliability at every layer - from individual grain logic through component behavior to full user journeys.
+  The Orleans tests focus on distributed systems concerns (persistence, clustering, observers) while the Blazor tests ensure UI correctness and user
+  experience quality.
+
+> Taking a step back. I realise this is a sample project to demonstrate the principles of using Orleans and Aspire together. I feel however, that it 
+probably does not best represent how this would be organised for a production scale solution. Do you have any thoughts on how this might be better 
+seperated from the aspects of the Razor App being seperate from the Orleans components Grains/Silo implementations and the Aspire configuration itself? 
+
+● Excellent observation! You're absolutely right - this sample conflates several concerns that should be separated in a production solution. Let me
+  outline a better architecture:
+
+  Current Problems
+
+  The OrleansVoting.Service project contains:
+  - Blazor UI (Pages, Components)
+  - Grain implementations (business logic)
+  - Grain interfaces (contracts)
+  - Service layer (PollService, DemoService)
+  - Both Silo hosting AND client code
+
+  This creates issues:
+  - Can't scale web tier independently from grain computation tier
+  - Can't version/deploy UI separately from business logic
+  - Grain implementations are exposed to the web layer
+  - No clear contract boundary for multiple client types
+  - Testing requires full web stack even for grain logic
+  - Violates separation of concerns
+
+  Recommended Production Architecture
+
+  OrleansVoting/
+  ├── OrleansVoting.Contracts/              # Grain interfaces & DTOs
+  │   ├── Grains/
+  │   │   ├── IPollGrain.cs
+  │   │   ├── IUserAgentGrain.cs
+  │   │   └── IPollWatcher.cs
+  │   ├── Models/
+  │   │   ├── PollState.cs
+  │   │   └── VotingModels.cs
+  │   └── Exceptions/
+  │       └── ThrottlingException.cs
+  │
+  ├── OrleansVoting.Grains/                 # Grain implementations only
+  │   ├── PollGrain.cs
+  │   ├── UserAgentGrain.cs
+  │   └── VoteGrain.cs
+  │
+  ├── OrleansVoting.Silo/                   # Dedicated Orleans silo host
+  │   ├── Program.cs                        # Minimal hosting, no HTTP
+  │   └── appsettings.json
+  │
+  ├── OrleansVoting.WebApp/                 # Blazor frontend (Orleans client)
+  │   ├── Pages/
+  │   ├── Services/
+  │   │   ├── PollService.cs               # Wraps grain calls
+  │   │   └── DemoService.cs
+  │   └── Program.cs                        # Orleans client config
+  │
+  ├── OrleansVoting.Api/                    # (Optional) REST API
+  │   ├── Controllers/
+  │   │   └── PollsController.cs
+  │   └── Program.cs                        # Another Orleans client
+  │
+  ├── OrleansVoting.ServiceDefaults/        # Shared Aspire config
+  │
+  └── OrleansVoting.AppHost/                # Aspire orchestration
+      └── Program.cs
+
+  Key Architectural Changes
+
+  1. OrleansVoting.Contracts (Class Library)
+
+  Pure interfaces and data contracts - no implementation.
+
+  Purpose:
+  - Shared by ALL projects (silos and clients)
+  - Defines the "API surface" of your grains
+  - Can be versioned independently
+  - Published as NuGet package in real production
+
+  Contains:
+  - Grain interfaces (IPollGrain, IUserAgentGrain, etc.)
+  - DTOs with [GenerateSerializer] attributes
+  - Observer interfaces (IPollWatcher)
+  - Shared exceptions
+  - No dependencies on Orleans hosting, just Microsoft.Orleans.Sdk
+
+  Benefits:
+  - Multiple client types can reference without pulling in implementations
+  - Clear versioning boundary
+  - Can generate OpenAPI specs from contracts
+  - Supports Orleans' "interface-based" RPC model
+
+  ---
+  2. OrleansVoting.Grains (Class Library)
+
+  Contains only grain implementations.
+
+  Purpose:
+  - Business logic lives here
+  - Referenced ONLY by silo hosts
+  - Never referenced by client applications
+
+  Dependencies:
+  - References OrleansVoting.Contracts
+  - Microsoft.Orleans.Runtime
+  - Microsoft.Orleans.Core.Abstractions
+
+  Benefits:
+  - Implementation details hidden from clients
+  - Can refactor internals without affecting clients
+  - Easier to unit test in isolation
+  - Can use internal visibility for helpers
+
+  ---
+  3. OrleansVoting.Silo (ASP.NET Core or Worker Service)
+
+  Dedicated silo host - headless compute tier.
+
+  Program.cs example:
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.AddServiceDefaults();
+  builder.AddKeyedRedisClient("voting-redis");
+
+  // This is a SILO, not a client
+  builder.UseOrleans(siloBuilder =>
+  {
+      // Grain assemblies
+      siloBuilder.ConfigureApplicationParts(parts =>
+      {
+          parts.AddApplicationPart(typeof(PollGrain).Assembly).WithReferences();
+      });
+  });
+
+  var app = builder.Build();
+
+  // Only health checks, no HTTP endpoints for business logic
+  app.MapDefaultEndpoints();
+
+  app.Run();
+
+  Characteristics:
+  - No UI, no public HTTP endpoints (except health/metrics)
+  - Hosts grain activations
+  - Can be pure Worker Service if no HTTP needed
+  - Scales independently based on grain compute needs
+
+  Aspire Configuration:
+  // In AppHost
+  var orleans = builder.AddOrleans("voting-cluster")
+      .WithClustering(redis)
+      .WithGrainStorage("votes", redis);
+
+  builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
+      .WithReference(orleans)
+      .WithReplicas(5);  // Scale for computation
+
+  ---
+  4. OrleansVoting.WebApp (Blazor Server App)
+
+  Pure Orleans client - presentation tier.
+
+  Program.cs example:
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.AddServiceDefaults();
+
+  // This is a CLIENT, not a silo
+  builder.UseOrleansClient();  // Different method!
+
+  builder.Services.AddRazorPages();
+  builder.Services.AddServerSideBlazor();
+  builder.Services.AddScoped<PollService>();
+
+  var app = builder.Build();
+  // ... normal Blazor setup
+
+  Characteristics:
+  - No grain implementations, only interfaces
+  - Connects to Orleans cluster as client
+  - Scales independently based on HTTP traffic
+  - Can have multiple instances behind load balancer
+
+  Dependencies:
+  - References OrleansVoting.Contracts (NOT Grains!)
+  - Orleans client packages only
+
+  Aspire Configuration:
+  builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
+      .WithReference(orleans)  // Connects as client
+      .WithExternalHttpEndpoints()
+      .WithReplicas(3);  // Scale for HTTP traffic
+
+  ---
+  5. OrleansVoting.Api (Optional - REST API)
+
+  Another Orleans client providing REST endpoints.
+
+  Purpose:
+  - Expose voting functionality via HTTP API
+  - Mobile apps, external integrations
+  - Different scaling profile than web UI
+
+  Example Controller:
+  [ApiController]
+  [Route("api/polls")]
+  public class PollsController : ControllerBase
+  {
+      private readonly IGrainFactory _grainFactory;
+
+      [HttpPost]
+      public async Task<IActionResult> CreatePoll([FromBody] CreatePollRequest request)
+      {
+          var userGrain = _grainFactory.GetGrain<IUserAgentGrain>(GetClientIp());
+          var pollId = await userGrain.CreatePoll(new PollState { ... });
+          return Ok(new { pollId });
+      }
+  }
+
+  Benefits:
+  - Separate API versioning from web UI
+  - Different authentication/authorization
+  - Can rate-limit differently
+  - Stateless, easier to scale
+
+  ---
+  Aspire Orchestration Changes
+
+  OrleansVoting.AppHost/Program.cs:
+  var builder = DistributedApplication.CreateBuilder(args);
+
+  var redis = builder.AddRedis("voting-redis")
+      .WithDataVolume();  // Persist data
+
+  var orleans = builder.AddOrleans("voting-cluster")
+      .WithClustering(redis)
+      .WithGrainStorage("votes", redis);
+
+  // Dedicated silo tier - compute/grain hosting
+  var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
+      .WithReference(orleans)
+      .WithReplicas(5);  // Scale for grain workload
+
+  // Web frontend tier - HTTP traffic
+  var web = builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
+      .WithReference(orleans)  // Client connection
+      .WaitFor(silo)  // Wait for at least one silo
+      .WithExternalHttpEndpoints()
+      .WithReplicas(3);  // Scale for web traffic
+
+  // Optional API tier
+  var api = builder.AddProject<Projects.OrleansVoting_Api>("voting-api")
+      .WithReference(orleans)
+      .WithExternalHttpEndpoints()
+      .WithReplicas(2);
+
+  builder.Build().Run();
+
+  Benefits of This Architecture
+
+  Scalability
+
+  - Scale silos (compute) independently from web (HTTP)
+  - Add more silos for complex grain operations
+  - Add more web replicas for traffic spikes
+  - Different resource allocations per tier
+
+  Deployment
+
+  - Deploy UI changes without touching grain code
+  - Deploy grain logic updates without UI downtime
+  - Independent versioning strategies
+  - Canary deployments per tier
+
+  Development
+
+  - Teams can work independently (UI team vs. domain logic team)
+  - Grain developers don't need to run web stack
+  - Web developers work against stable grain contracts
+  - Easier onboarding (smaller scope per project)
+
+  Testing
+
+  - Unit test grains without any web dependencies
+  - Integration test silos in isolation
+  - UI tests can use test cluster or mocked grain factory
+  - Contract testing between layers
+
+  Reusability
+
+  - Multiple client types share same grain cluster
+  - Mobile backend, webhooks, batch jobs all use same grains
+  - Grain contracts become your "domain API"
+
+  Security
+
+  - Grain implementations not exposed to web tier
+  - Web tier can't accidentally reference internal grain code
+  - Clearer trust boundaries
+  - Easier to audit what's public vs. internal
+
+  ---
+  Migration Path from Current Sample
+
+  1. Create Contracts project → Move interfaces + DTOs
+  2. Create Grains project → Move implementations, reference Contracts
+  3. Split Service → Create Silo project with Orleans hosting only
+  4. Convert Service → Rename to WebApp, remove grain implementations, add Orleans client config
+  5. Update AppHost → Add separate silo and web projects with proper references
+  6. Update tests → Separate grain tests from UI tests
+
+  ---
+  This architecture aligns with microservices principles while leveraging Orleans' actor model and Aspire's orchestration. It's how you'd build a
+  production system that needs to scale, evolve, and support multiple client types.
+
+> Ok, can you write a detailed plan to implement this. We will proceed very carefully in small steps to ensure each change we make maintains the current 
+behaviour. In order to confirm we are maintaining the current behaviour we will add tests before making the changes that will remain green after the 
+changes have been made. Can you add notes to your testing plan to make sure code is never changed without there already being a passing test that will go 
+red if the change has broken something or remain green if the change is made successfully. 
+
+● Detailed Migration Plan: Refactoring to Production Architecture
+
+  Overview Principles
+
+  Test-First Philosophy:
+  - ✅ Write tests BEFORE any refactoring
+  - ✅ Tests must pass before refactoring begins
+  - ✅ Tests must remain green after refactoring
+  - ✅ If a test goes red during refactoring, stop and fix immediately
+  - ✅ Each phase has its own test safety net
+
+  Migration Strategy:
+  - Make changes incrementally
+  - Never break existing functionality
+  - Keep application deployable at all times
+  - Verify behavior after each step
+
+  ---
+  Phase 1: Establish Test Safety Net (Current System)
+
+  Goal: Achieve sufficient test coverage on the existing monolithic structure so we can refactor with confidence.
+
+  Step 1.1: Create Test Infrastructure
+
+  Actions:
+  1. Create OrleansVoting.Tests.csproj
+  2. Add packages:
+     - Microsoft.Orleans.TestingHost
+     - xUnit
+     - FluentAssertions
+     - bUnit
+     - Moq
+  3. Create test fixtures and helpers
+
+  Deliverables:
+  - TestClusterFixture.cs - Shared Orleans test cluster
+  - TestRedisFixture.cs - In-memory Redis or Testcontainers
+  - Test project compiles and can discover tests
+
+  Verification: dotnet test runs successfully (even with 0 tests)
+
+  ---
+  Step 1.2: Add Grain Unit Tests
+
+  Purpose: These tests verify grain behavior in isolation. They MUST pass before we move grains to a separate project.
+
+  Tests to Write:
+
+  PollGrain Tests (OrleansVoting.Tests/Grains/PollGrainTests.cs)
+
+  [Fact]
+  public async Task CreatePoll_ValidState_PersistsCorrectly()
+  {
+      // Arrange
+      var grain = _cluster.GrainFactory.GetGrain<IPollGrain>("test-poll-1");
+      var state = new PollState
+      {
+          Question = "Test?",
+          Options = new List<(string, int)> { ("A", 0), ("B", 0) }
+      };
+
+      // Act
+      await grain.CreatePoll(state);
+      var result = await grain.GetCurrentResults();
+
+      // Assert
+      result.Question.Should().Be("Test?");
+      result.Options.Should().HaveCount(2);
+  }
+
+  [Fact]
+  public async Task AddVote_ValidOption_IncrementsCount()
+  {
+      // Arrange
+      var grain = _cluster.GrainFactory.GetGrain<IPollGrain>("test-poll-2");
+      var state = new PollState
+      {
+          Question = "Test?",
+          Options = new List<(string, int)> { ("A", 0), ("B", 0) }
+      };
+      await grain.CreatePoll(state);
+
+      // Act
+      await grain.AddVote(0);
+      var result = await grain.GetCurrentResults();
+
+      // Assert
+      result.Options[0].Votes.Should().Be(1);
+  }
+
+  [Fact]
+  public async Task AddVote_InvalidOption_ThrowsKeyNotFoundException()
+  {
+      // This test ensures contract behavior is maintained
+      var grain = _cluster.GrainFactory.GetGrain<IPollGrain>("test-poll-3");
+      var state = new PollState
+      {
+          Question = "Test?",
+          Options = new List<(string, int)> { ("A", 0) }
+      };
+      await grain.CreatePoll(state);
+
+      // Act & Assert
+      await Assert.ThrowsAsync<KeyNotFoundException>(() => grain.AddVote(5));
+  }
+
+  [Fact]
+  public async Task AddVote_NotifiesObservers()
+  {
+      // Arrange
+      var grain = _cluster.GrainFactory.GetGrain<IPollGrain>("test-poll-4");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+      await grain.CreatePoll(state);
+
+      var observer = new TestPollWatcher();
+      var observerRef = _cluster.GrainFactory.CreateObjectReference<IPollWatcher>(observer);
+      await grain.StartWatching(observerRef);
+
+      // Act
+      await grain.AddVote(0);
+      await Task.Delay(100); // Allow notification to propagate
+
+      // Assert
+      observer.UpdateCount.Should().Be(1);
+      observer.LastState.Options[0].Votes.Should().Be(1);
+  }
+
+  UserAgentGrain Tests (OrleansVoting.Tests/Grains/UserAgentGrainTests.cs)
+
+  [Fact]
+  public async Task CreatePoll_ReturnsValidPollId()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-1");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+
+      var pollId = await grain.CreatePoll(state);
+
+      pollId.Should().NotBeNullOrEmpty();
+      pollId.Length.Should().Be(6);
+  }
+
+  [Fact]
+  public async Task CreatePoll_SixthPoll_ThrowsInvalidOperationException()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-2");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+
+      // Create 5 polls
+      for (int i = 0; i < 5; i++)
+      {
+          await grain.CreatePoll(state);
+      }
+
+      // 6th should fail
+      await Assert.ThrowsAsync<InvalidOperationException>(() => grain.CreatePoll(state));
+  }
+
+  [Fact]
+  public async Task AddVote_FirstTime_Succeeds()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-3");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+      var pollId = await grain.CreatePoll(state);
+
+      var result = await grain.AddVote(pollId, 0);
+
+      result.Options[0].Votes.Should().Be(1);
+  }
+
+  [Fact]
+  public async Task AddVote_DoubleVote_ThrowsInvalidOperationException()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-4");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+      var pollId = await grain.CreatePoll(state);
+
+      await grain.AddVote(pollId, 0);
+
+      await Assert.ThrowsAsync<InvalidOperationException>(() => grain.AddVote(pollId, 0));
+  }
+
+  [Fact]
+  public async Task Throttling_RapidRequests_ThrowsThrottlingException()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-5");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+
+      // Make 11 rapid requests (threshold is 10)
+      for (int i = 0; i < 10; i++)
+      {
+          await grain.CreatePoll(state);
+      }
+
+      await Assert.ThrowsAsync<ThrottlingException>(() => grain.CreatePoll(state));
+  }
+
+  [Fact]
+  public async Task GetPollResults_ReturnsVotedStatus()
+  {
+      var grain = _cluster.GrainFactory.GetGrain<IUserAgentGrain>("user-6");
+      var state = new PollState { Question = "Test?", Options = new List<(string, int)> { ("A", 0) }};
+      var pollId = await grain.CreatePoll(state);
+
+      var (results1, voted1) = await grain.GetPollResults(pollId);
+      voted1.Should().BeFalse();
+
+      await grain.AddVote(pollId, 0);
+
+      var (results2, voted2) = await grain.GetPollResults(pollId);
+      voted2.Should().BeTrue();
+  }
+
+  Success Criteria:
+  - ✅ All grain tests pass
+  - ✅ Tests cover core behaviors (create, vote, throttle, observers)
+  - ✅ Tests use actual TestCluster (not mocks) for grains
+  - ✅ Tests verify both success and error cases
+  - ✅ Run time: < 30 seconds for all grain tests
+
+  ⚠️ CHECKPOINT: Do not proceed to Step 1.3 until all these tests are green.
+
+  ---
+  Step 1.3: Add Service Layer Tests
+
+  Purpose: Verify PollService wrapping logic. These tests ensure the service layer correctly orchestrates grain calls.
+
+  Tests to Write:
+
+  PollService Tests (OrleansVoting.Tests/Services/PollServiceTests.cs)
+
+  public class PollServiceTests
+  {
+      private readonly Mock<IGrainFactory> _mockGrainFactory;
+      private readonly Mock<IUserAgentGrain> _mockUserGrain;
+      private readonly PollService _sut;
+
+      public PollServiceTests()
+      {
+          _mockGrainFactory = new Mock<IGrainFactory>();
+          _mockUserGrain = new Mock<IUserAgentGrain>();
+
+          _mockGrainFactory
+              .Setup(x => x.GetGrain<IUserAgentGrain>(It.IsAny<string>(), null))
+              .Returns(_mockUserGrain.Object);
+
+          _sut = new PollService(_mockGrainFactory.Object);
+      }
+
+      [Fact]
+      public void Initialize_SetsUserAgentGrain()
+      {
+          // Act
+          _sut.Initialize("192.168.1.1");
+
+          // Assert - subsequent calls should work
+          _mockGrainFactory.Verify(x => x.GetGrain<IUserAgentGrain>("192.168.1.1", null), Times.Once);
+      }
+
+      [Fact]
+      public async Task CreatePollAsync_CallsUserAgentGrain()
+      {
+          // Arrange
+          _sut.Initialize("192.168.1.1");
+          _mockUserGrain
+              .Setup(x => x.CreatePoll(It.IsAny<PollState>()))
+              .ReturnsAsync("abc123");
+
+          // Act
+          var result = await _sut.CreatePollAsync("Question?", new List<string> { "A", "B" });
+
+          // Assert
+          result.Should().Be("abc123");
+          _mockUserGrain.Verify(x => x.CreatePoll(It.Is<PollState>(
+              p => p.Question == "Question?" && p.Options.Count == 2
+          )), Times.Once);
+      }
+
+      [Fact]
+      public async Task GetPollResultsAsync_ReturnsStateAndVoted()
+      {
+          // Arrange
+          _sut.Initialize("192.168.1.1");
+          var expectedState = new PollState { Question = "Q", Options = new() };
+          _mockUserGrain
+              .Setup(x => x.GetPollResults("poll1"))
+              .ReturnsAsync((expectedState, true));
+
+          // Act
+          var (results, voted) = await _sut.GetPollResultsAsync("poll1");
+
+          // Assert
+          results.Should().Be(expectedState);
+          voted.Should().BeTrue();
+      }
+
+      [Fact]
+      public async Task AddVoteAsync_CallsUserAgentGrain()
+      {
+          // Arrange
+          _sut.Initialize("192.168.1.1");
+          var expectedState = new PollState { Question = "Q", Options = new() };
+          _mockUserGrain
+              .Setup(x => x.AddVote("poll1", 0))
+              .ReturnsAsync(expectedState);
+
+          // Act
+          var result = await _sut.AddVoteAsync("poll1", 0);
+
+          // Assert
+          result.Should().Be(expectedState);
+      }
+
+      [Fact]
+      public async Task WatchPoll_CreatesObserverReference()
+      {
+          // Arrange
+          var mockPollGrain = new Mock<IPollGrain>();
+          _mockGrainFactory
+              .Setup(x => x.GetGrain<IPollGrain>("poll1", null))
+              .Returns(mockPollGrain.Object);
+
+          var watcherRef = Mock.Of<IPollWatcher>();
+          _mockGrainFactory
+              .Setup(x => x.CreateObjectReference<IPollWatcher>(It.IsAny<IPollWatcher>()))
+              .Returns(watcherRef);
+
+          var watcher = new TestPollWatcher();
+
+          // Act
+          var subscription = await _sut.WatchPoll("poll1", watcher);
+
+          // Assert
+          subscription.Should().NotBeNull();
+          _mockGrainFactory.Verify(x => x.CreateObjectReference<IPollWatcher>(watcher), Times.Once);
+      }
+  }
+
+  Success Criteria:
+  - ✅ All service layer tests pass
+  - ✅ Tests use mocks (not real grains) for isolation
+  - ✅ Tests verify correct grain method calls
+  - ✅ Fast execution (< 5 seconds)
+
+  ⚠️ CHECKPOINT: Do not proceed until all tests green.
+
+  ---
+  Step 1.4: Add Blazor Component Tests
+
+  Purpose: Verify UI component behavior. These tests ensure UI logic remains correct during refactoring.
+
+  Tests to Write:
+
+  PollEditor.razor Tests (OrleansVoting.Tests/Components/PollEditorTests.cs)
+
+  public class PollEditorTests : TestContext
+  {
+      [Fact]
+      public void Render_DisplaysForm()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<NavigationManager>());
+
+          // Act
+          var cut = RenderComponent<PollEditor>();
+
+          // Assert
+          cut.Find("#pollTitle").Should().NotBeNull();
+          cut.Find("input[placeholder='Option value']").Should().NotBeNull();
+      }
+
+      [Fact]
+      public void AddOption_WithValidInput_AddsToList()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<NavigationManager>());
+
+          var cut = RenderComponent<PollEditor>();
+
+          // Act
+          cut.Find("input[placeholder='Option value']").Change("Option 1");
+          cut.Find("button#button-add").Click();
+
+          // Assert
+          cut.FindAll("input[type='text'][value='Option 1']").Should().HaveCount(1);
+      }
+
+      [Fact]
+      public async Task CreatePoll_WithValidData_CallsService()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          mockPollService
+              .Setup(x => x.CreatePollAsync(It.IsAny<string>(), It.IsAny<List<string>>()))
+              .ReturnsAsync("abc123");
+
+          var mockNav = new Mock<NavigationManager>();
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(mockNav.Object);
+
+          var cut = RenderComponent<PollEditor>();
+
+          // Act
+          cut.Find("#pollTitle").Change("My Poll");
+          cut.Find("input[placeholder='Option value']").Change("Option A");
+          cut.Find("button#button-add").Click();
+          cut.Find("button.btn-primary").Click();
+
+          // Wait for async operation
+          await Task.Delay(100);
+
+          // Assert
+          mockPollService.Verify(x => x.CreatePollAsync("My Poll",
+              It.Is<List<string>>(list => list.Contains("Option A"))), Times.Once);
+      }
+
+      [Fact]
+      public void DemoAutofill_PopulatesFields()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<NavigationManager>());
+
+          var cut = RenderComponent<PollEditor>();
+
+          // Act
+          cut.Find("button.btn-danger").Click();
+
+          // Assert
+          cut.Find("#pollTitle").GetAttribute("value").Should().Contain("favorite color");
+          cut.FindAll("input[type='text']").Should().HaveCountGreaterThan(3);
+      }
+  }
+
+  Poll.razor Tests (OrleansVoting.Tests/Components/PollTests.cs)
+
+  public class PollTests : TestContext
+  {
+      [Fact]
+      public async Task OnInitialized_LoadsPollResults()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          var pollState = new PollState
+          {
+              Question = "Test?",
+              Options = new List<(string, int)> { ("A", 5), ("B", 3) }
+          };
+          mockPollService
+              .Setup(x => x.GetPollResultsAsync("test123"))
+              .ReturnsAsync((pollState, false));
+          mockPollService
+              .Setup(x => x.WatchPoll(It.IsAny<string>(), It.IsAny<IPollWatcher>()))
+              .ReturnsAsync(Mock.Of<IAsyncDisposable>());
+
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<DemoService>());
+
+          // Act
+          var cut = RenderComponent<Poll>(parameters =>
+              parameters.Add(p => p.PollId, "test123"));
+
+          // Wait for initialization
+          await Task.Delay(100);
+
+          // Assert
+          cut.Markup.Should().Contain("Test?");
+          cut.FindAll("button.btn-outline-secondary").Should().HaveCount(2);
+      }
+
+      [Fact]
+      public async Task VoteForOption_CallsService()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          var pollState = new PollState
+          {
+              Question = "Test?",
+              Options = new List<(string, int)> { ("A", 0) }
+          };
+          mockPollService
+              .Setup(x => x.GetPollResultsAsync("test123"))
+              .ReturnsAsync((pollState, false));
+          mockPollService
+              .Setup(x => x.AddVoteAsync("test123", 0))
+              .ReturnsAsync(pollState);
+          mockPollService
+              .Setup(x => x.WatchPoll(It.IsAny<string>(), It.IsAny<IPollWatcher>()))
+              .ReturnsAsync(Mock.Of<IAsyncDisposable>());
+
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<DemoService>());
+
+          var cut = RenderComponent<Poll>(parameters =>
+              parameters.Add(p => p.PollId, "test123"));
+          await Task.Delay(100);
+
+          // Act
+          cut.Find("button.btn-outline-secondary").Click();
+          await Task.Delay(100);
+
+          // Assert
+          mockPollService.Verify(x => x.AddVoteAsync("test123", 0), Times.Once);
+          cut.Markup.Should().Contain("progress-bar"); // Shows results after voting
+      }
+
+      [Fact]
+      public async Task OnInitialized_WithError_DisplaysErrorMessage()
+      {
+          // Arrange
+          var mockPollService = new Mock<PollService>();
+          mockPollService
+              .Setup(x => x.GetPollResultsAsync("test123"))
+              .ThrowsAsync(new Exception("Poll not found"));
+
+          Services.AddSingleton(mockPollService.Object);
+          Services.AddSingleton(Mock.Of<DemoService>());
+
+          // Act
+          var cut = RenderComponent<Poll>(parameters =>
+              parameters.Add(p => p.PollId, "test123"));
+          await Task.Delay(100);
+
+          // Assert
+          cut.Markup.Should().Contain("alert-danger");
+          cut.Markup.Should().Contain("Poll not found");
+      }
+  }
+
+  Success Criteria:
+  - ✅ All component tests pass
+  - ✅ Tests verify user interactions
+  - ✅ Tests verify service calls
+  - ✅ Tests verify error handling
+  - ✅ Fast execution (< 10 seconds)
+
+  ⚠️ CHECKPOINT: Do not proceed until all tests green.
+
+  ---
+  Step 1.5: Add Integration Smoke Tests
+
+  Purpose: End-to-end tests to verify the full system works. These are our "golden path" tests.
+
+  Tests to Write:
+
+  Integration Tests (OrleansVoting.Tests/Integration/SmokeTests.cs)
+
+  public class SmokeTests : IClassFixture<TestClusterFixture>
+  {
+      private readonly TestCluster _cluster;
+      private readonly PollService _pollService;
+
+      public SmokeTests(TestClusterFixture fixture)
+      {
+          _cluster = fixture.Cluster;
+          _pollService = new PollService(_cluster.GrainFactory);
+      }
+
+      [Fact]
+      public async Task EndToEnd_CreatePollAndVote_Success()
+      {
+          // Arrange
+          _pollService.Initialize($"test-user-{Guid.NewGuid()}");
+
+          // Act - Create poll
+          var pollId = await _pollService.CreatePollAsync(
+              "What's your favorite color?",
+              new List<string> { "Red", "Blue", "Green" }
+          );
+
+          // Act - Get poll
+          var (results, voted) = await _pollService.GetPollResultsAsync(pollId);
+
+          // Assert - Poll created correctly
+          results.Question.Should().Be("What's your favorite color?");
+          results.Options.Should().HaveCount(3);
+          voted.Should().BeFalse();
+
+          // Act - Vote
+          var voteResult = await _pollService.AddVoteAsync(pollId, 0);
+
+          // Assert - Vote recorded
+          voteResult.Options[0].Votes.Should().Be(1);
+
+          // Act - Check voted status
+          var (_, votedNow) = await _pollService.GetPollResultsAsync(pollId);
+          votedNow.Should().BeTrue();
+      }
+
+      [Fact]
+      public async Task RealTimeUpdates_ObserverReceivesNotification()
+      {
+          // Arrange
+          var user1 = new PollService(_cluster.GrainFactory);
+          user1.Initialize($"test-user-{Guid.NewGuid()}");
+
+          var pollId = await user1.CreatePollAsync(
+              "Test?",
+              new List<string> { "A", "B" }
+          );
+
+          var watcher = new TestPollWatcher();
+          var subscription = await user1.WatchPoll(pollId, watcher);
+
+          // Act - Different user votes
+          var user2 = new PollService(_cluster.GrainFactory);
+          user2.Initialize($"test-user-{Guid.NewGuid()}");
+          await user2.AddVoteAsync(pollId, 0);
+
+          // Wait for notification
+          await Task.Delay(500);
+
+          // Assert
+          watcher.UpdateCount.Should().BeGreaterThan(0);
+          watcher.LastState.Options[0].Votes.Should().BeGreaterThan(0);
+
+          await subscription.DisposeAsync();
+      }
+
+      [Fact]
+      public async Task Throttling_EnforcedAcrossRequests()
+      {
+          // Arrange
+          var service = new PollService(_cluster.GrainFactory);
+          service.Initialize($"throttle-user-{Guid.NewGuid()}");
+
+          // Act - Make 10 requests (at threshold)
+          for (int i = 0; i < 10; i++)
+          {
+              await service.CreatePollAsync($"Poll {i}", new List<string> { "A" });
+          }
+
+          // Act & Assert - 11th should throw
+          await Assert.ThrowsAsync<ThrottlingException>(() =>
+              service.CreatePollAsync("Poll 11", new List<string> { "A" })
+          );
+      }
+  }
+
+  Success Criteria:
+  - ✅ All integration tests pass
+  - ✅ Tests verify end-to-end flows
+  - ✅ Tests use real Orleans cluster
+  - ✅ Tests verify cross-grain interactions
+
+  ⚠️ MAJOR CHECKPOINT:
+  - All tests from Steps 1.2-1.5 must be green
+  - Run full test suite: dotnet test
+  - All tests must pass before proceeding to Phase 2
+  - This is your safety net for all future refactoring
+
+  ---
+  Phase 2: Extract Contracts Project
+
+  Goal: Create OrleansVoting.Contracts and move interfaces/DTOs without breaking anything.
+
+  Step 2.1: Create Contracts Project
+
+  Actions:
+  dotnet new classlib -n OrleansVoting.Contracts
+  cd OrleansVoting.Contracts
+  dotnet add package Microsoft.Orleans.Sdk
+
+  Update OrleansVoting.Contracts.csproj:
+  <Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.2.1" />
+    </ItemGroup>
+  </Project>
+
+  Add to solution:
+  dotnet sln OrleansVoting.sln add OrleansVoting.Contracts/OrleansVoting.Contracts.csproj
+
+  Verification:
+  - ✅ Project builds: dotnet build OrleansVoting.Contracts
+  - ✅ Solution builds: dotnet build OrleansVoting.sln
+  - ✅ All tests still pass: dotnet test
+
+  ---
+  Step 2.2: Copy Grain Interfaces to Contracts
+
+  Actions:
+  1. Copy (don't move yet!) these files to OrleansVoting.Contracts:
+    - Grains/IPollGrain.cs (including PollState class)
+    - Grains/IUserAgentGrain.cs
+    - Grains/IVoteGrain.cs
+    - Grains/IPollWatcher.cs
+    - Helpers/ThrottlingException.cs
+  2. Update namespaces in copied files to OrleansVoting.Contracts
+  3. Create folder structure:
+  OrleansVoting.Contracts/
+  ├── Grains/
+  │   ├── IPollGrain.cs
+  │   ├── IUserAgentGrain.cs
+  │   ├── IVoteGrain.cs
+  │   └── IPollWatcher.cs
+  ├── Models/
+  │   └── PollState.cs  (if separated from IPollGrain.cs)
+  └── Exceptions/
+      └── ThrottlingException.cs
+
+  Important: At this point, files exist in BOTH locations. This is intentional.
+
+  Verification:
+  - ✅ OrleansVoting.Contracts builds
+  - ✅ OrleansVoting.Service still builds (uses original files)
+  - ✅ All tests still pass: dotnet test
+
+  ---
+  Step 2.3: Reference Contracts from Service
+
+  Actions:
+  1. Add project reference in OrleansVoting.Service.csproj:
+  <ItemGroup>
+    <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
+  </ItemGroup>
+
+  2. Do NOT change any code yet
+
+  Verification:
+  - ✅ OrleansVoting.Service builds
+  - ✅ All tests still pass: dotnet test
+
+  ---
+  Step 2.4: Update Service to Use Contracts
+
+  Actions:
+  1. In OrleansVoting.Service, add using:
+  using OrleansVoting.Contracts.Grains;
+  using OrleansVoting.Contracts.Exceptions;
+
+  2. Delete original interface files ONE AT A TIME:
+    - Delete Grains/IPollGrain.cs → Build → Test
+    - Delete Grains/IUserAgentGrain.cs → Build → Test
+    - Delete Grains/IVoteGrain.cs → Build → Test
+    - Delete Grains/IPollWatcher.cs → Build → Test
+    - Delete Helpers/ThrottlingException.cs → Build → Test
+  3. Fix any namespace issues in grain implementations:
+    - PollGrain.cs, UserAgentGrain.cs, VoteGrain.cs should now reference contracts
+
+  Test After Each Deletion:
+  dotnet build
+  dotnet test
+
+  Success Criteria:
+  - ✅ No duplicate files
+  - ✅ Service references Contracts for all interfaces
+  - ✅ Grain implementations still in Service (for now)
+  - ✅ All tests still green
+
+  ⚠️ CHECKPOINT: If any test fails, revert the last deletion and investigate.
+
+  ---
+  Step 2.5: Update Tests to Use Contracts
+
+  Actions:
+  1. Add reference in OrleansVoting.Tests.csproj:
+  <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
+
+  2. Update test file usings to reference contracts:
+  using OrleansVoting.Contracts.Grains;
+  using OrleansVoting.Contracts.Exceptions;
+
+  Verification:
+  - ✅ Tests build
+  - ✅ All tests pass: dotnet test
+
+  ---
+  Phase 3: Extract Grains Project
+
+  Goal: Move grain implementations to separate project, keep interfaces in Contracts.
+
+  Step 3.1: Create Grains Project
+
+  Actions:
+  dotnet new classlib -n OrleansVoting.Grains
+  cd OrleansVoting.Grains
+  dotnet add package Microsoft.Orleans.Runtime
+  dotnet add package Microsoft.Orleans.Core.Abstractions
+  dotnet add reference ../OrleansVoting.Contracts/OrleansVoting.Contracts.csproj
+
+  Add to solution:
+  dotnet sln OrleansVoting.sln add OrleansVoting.Grains/OrleansVoting.Grains.csproj
+
+  Verification:
+  - ✅ Project builds
+  - ✅ All tests still pass: dotnet test
+
+  ---
+  Step 3.2: Copy Grain Implementations
+
+  Actions:
+  1. Copy (don't move yet!) these files to OrleansVoting.Grains:
+    - Grains/PollGrain.cs
+    - Grains/UserAgentGrain.cs
+    - Grains/VoteGrain.cs
+  2. Update namespace to OrleansVoting.Grains
+  3. Add using for contracts:
+  using OrleansVoting.Contracts.Grains;
+
+  Verification:
+  - ✅ OrleansVoting.Grains builds
+  - ✅ OrleansVoting.Service still builds (uses original files)
+  - ✅ All tests still pass: dotnet test
+
+  ---
+  Step 3.3: Reference Grains from Service
+
+  Actions:
+  1. Add project reference in OrleansVoting.Service.csproj:
+  <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
+
+  Verification:
+  - ✅ Builds
+  - ✅ All tests pass
+
+  ---
+  Step 3.4: Remove Grain Implementations from Service
+
+  Actions:
+  1. Delete implementation files ONE AT A TIME from OrleansVoting.Service:
+    - Delete Grains/PollGrain.cs → Build → Test
+    - Delete Grains/UserAgentGrain.cs → Build → Test
+    - Delete Grains/VoteGrain.cs → Build → Test
+  2. Service should now only reference Grains project, not contain implementations
+
+  Test After Each Deletion:
+  dotnet build
+  dotnet test
+
+  Success Criteria:
+  - ✅ No grain implementations in Service
+  - ✅ Service references both Contracts and Grains projects
+  - ✅ All tests green
+
+  ---
+  Step 3.5: Update Tests to Use Grains Project
+
+  Actions:
+  1. Add reference in OrleansVoting.Tests.csproj:
+  <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
+
+  2. Verify grain types are resolved correctly
+
+  Verification:
+  - ✅ Tests build
+  - ✅ All tests pass
+
+  ⚠️ CHECKPOINT: Phase 3 complete. Grains are now separate!
+
+  ---
+  Phase 4: Create Dedicated Silo Project
+
+  Goal: Create Orleans hosting project separate from web application.
+
+  Step 4.1: Add Tests for Silo Hosting
+
+  Purpose: Verify silo can start and host grains before we create it.
+
+  Tests to Write (OrleansVoting.Tests/Hosting/SiloHostTests.cs):
+  public class SiloHostTests
+  {
+      [Fact]
+      public async Task Silo_CanStart_WithGrains()
+      {
+          // Arrange
+          var builder = Host.CreateApplicationBuilder();
+          builder.UseOrleans(silo =>
+          {
+              silo.UseLocalhostClustering();
+              silo.ConfigureApplicationParts(parts =>
+              {
+                  parts.AddApplicationPart(typeof(PollGrain).Assembly).WithReferences();
+              });
+          });
+
+          var host = builder.Build();
+
+          // Act
+          await host.StartAsync();
+
+          // Assert
+          host.Services.GetRequiredService<IGrainFactory>().Should().NotBeNull();
+
+          // Cleanup
+          await host.StopAsync();
+      }
+
+      [Fact]
+      public async Task Silo_GrainsActivate_Successfully()
+      {
+          // Arrange
+          var builder = Host.CreateApplicationBuilder();
+          builder.UseOrleans(silo =>
+          {
+              silo.UseLocalhostClustering();
+              silo.ConfigureApplicationParts(parts =>
+              {
+                  parts.AddApplicationPart(typeof(PollGrain).Assembly).WithReferences();
+              });
+              silo.AddMemoryGrainStorage("votes");
+          });
+
+          var host = builder.Build();
+          await host.StartAsync();
+
+          // Act
+          var grainFactory = host.Services.GetRequiredService<IGrainFactory>();
+          var grain = grainFactory.GetGrain<IPollGrain>("test-silo-grain");
+          var state = new PollState { Question = "Test?", Options = new() };
+          await grain.CreatePoll(state);
+          var result = await grain.GetCurrentResults();
+
+          // Assert
+          result.Question.Should().Be("Test?");
+
+          // Cleanup
+          await host.StopAsync();
+      }
+  }
+
+  Run tests - they should pass:
+  dotnet test --filter "FullyQualifiedName~SiloHostTests"
+
+  Success Criteria:
+  - ✅ Silo hosting tests pass
+  - ✅ Verifies grains can activate in dedicated host
+
+  ---
+  Step 4.2: Create Silo Project
+
+  Actions:
+  dotnet new web -n OrleansVoting.Silo
+  cd OrleansVoting.Silo
+  dotnet add package Aspire.Hosting.Orleans
+  dotnet add package Aspire.StackExchange.Redis
+  dotnet add package Microsoft.Orleans.Server
+  dotnet add package Microsoft.Orleans.Clustering.Redis
+  dotnet add package Microsoft.Orleans.Persistence.Redis
+  dotnet add reference ../OrleansVoting.Contracts/OrleansVoting.Contracts.csproj
+  dotnet add reference ../OrleansVoting.Grains/OrleansVoting.Grains.csproj
+  dotnet add reference ../OrleansVoting.ServiceDefaults/OrleansVoting.ServiceDefaults.csproj
+
+  Create OrleansVoting.Silo/Program.cs:
+  var builder = WebApplication.CreateBuilder(args);
+
+  builder.AddServiceDefaults();
+  builder.AddKeyedRedisClient("voting-redis");
+
+  builder.UseOrleans(siloBuilder =>
+  {
+      siloBuilder.ConfigureApplicationParts(parts =>
+      {
+          parts.AddApplicationPart(typeof(OrleansVoting.Grains.PollGrain).Assembly)
+               .WithReferences();
+      });
+  });
+
+  var app = builder.Build();
+
+  app.MapDefaultEndpoints();
+
+  app.Run();
+
+  Add to solution:
+  dotnet sln OrleansVoting.sln add OrleansVoting.Silo/OrleansVoting.Silo.csproj
+
+  Verification:
+  - ✅ Silo project builds: dotnet build OrleansVoting.Silo
+  - ✅ All existing tests pass: dotnet test
+
+  ---
+  Step 4.3: Add Silo to AppHost (Parallel Deployment)
+
+  Purpose: Run BOTH old Service (with embedded silo) AND new dedicated Silo simultaneously.
+
+  Update OrleansVoting.AppHost/Program.cs:
+  var builder = DistributedApplication.CreateBuilder(args);
+
+  var redis = builder.AddRedis("voting-redis");
+
+  var orleans = builder.AddOrleans("voting-cluster")
+      .WithClustering(redis)
+      .WithGrainStorage("votes", redis);
+
+  // NEW: Dedicated silo instances
+  var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
+      .WithReference(orleans)
+      .WithReplicas(2);  // Start with 2 replicas
+
+  // EXISTING: Service with embedded silo (still running!)
+  builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
+      .WithReference(orleans)
+      .WaitFor(redis)
+      .WithReplicas(3)
+      .WithExternalHttpEndpoints();
+
+  builder.Build().Run();
+
+  Run the application:
+  dotnet run --project OrleansVoting.AppHost
+
+  Manual Verification:
+  - ✅ Aspire dashboard shows both voting-silo and voting-fe
+  - ✅ Both are "Running"
+  - ✅ Web UI accessible and functional
+  - ✅ Can create polls and vote
+  - ✅ Real-time updates work
+
+  Automated Verification:
+  dotnet test
+
+  Success Criteria:
+  - ✅ All tests pass
+  - ✅ Application runs with hybrid architecture
+  - ✅ Grains can activate on either Service or Silo instances
+
+  ---
+  Phase 5: Convert Service to Client-Only WebApp
+
+  Goal: Remove silo hosting from Service, make it pure Orleans client.
+
+  Step 5.1: Add Tests for Client-Only Configuration
+
+  Purpose: Verify service can work as pure client before removing silo code.
+
+  Tests to Write (OrleansVoting.Tests/Hosting/ClientHostTests.cs):
+  public class ClientHostTests
+  {
+      [Fact]
+      public async Task Client_CanConnect_ToSilo()
+      {
+          // Arrange - Start a silo
+          var siloBuilder = Host.CreateApplicationBuilder();
+          siloBuilder.UseOrleans(silo =>
+          {
+              silo.UseLocalhostClustering();
+              silo.ConfigureApplicationParts(parts =>
+              {
+                  parts.AddApplicationPart(typeof(PollGrain).Assembly).WithReferences();
+              });
+              silo.AddMemoryGrainStorage("votes");
+          });
+          var siloHost = siloBuilder.Build();
+          await siloHost.StartAsync();
+
+          // Arrange - Start a client
+          var clientBuilder = Host.CreateApplicationBuilder();
+          clientBuilder.UseOrleansClient(client =>
+          {
+              client.UseLocalhostClustering();
+          });
+          var clientHost = clientBuilder.Build();
+          await clientHost.StartAsync();
+
+          // Act
+          var grainFactory = clientHost.Services.GetRequiredService<IGrainFactory>();
+          var grain = grainFactory.GetGrain<IPollGrain>("test-client-grain");
+          var state = new PollState { Question = "Test?", Options = new() };
+          await grain.CreatePoll(state);
+          var result = await grain.GetCurrentResults();
+
+          // Assert
+          result.Question.Should().Be("Test?");
+
+          // Cleanup
+          await clientHost.StopAsync();
+          await siloHost.StopAsync();
+      }
+  }
+
+  Run tests:
+  dotnet test --filter "FullyQualifiedName~ClientHostTests"
+
+  Success Criteria:
+  - ✅ Client host tests pass
+  - ✅ Demonstrates client-only configuration works
+
+  ---
+  Step 5.2: Create Client Configuration Method
+
+  Purpose: Add extension method to configure Orleans client, keeping both configurations side-by-side initially.
+
+  Create OrleansVoting.ServiceDefaults/OrleansExtensions.cs:
+  namespace Microsoft.Extensions.Hosting;
+
+  public static class OrleansExtensions
+  {
+      public static IHostApplicationBuilder UseOrleansClient(
+          this IHostApplicationBuilder builder)
+      {
+          builder.UseOrleansClient(clientBuilder =>
+          {
+              // Client-specific configuration
+              // Clustering configuration will come from Aspire
+          });
+
+          return builder;
+      }
+  }
+
+  Verification:
+  - ✅ ServiceDefaults builds
+  - ✅ All tests pass
+
+  ---
+  Step 5.3: Create Backup of Current Service
+
+  Actions:
+  # Create a backup branch
+  git add -A
+  git commit -m "Checkpoint: Before converting Service to client-only"
+  git branch backup/service-with-silo
+
+  Purpose: Safety net if we need to revert.
+
+  ---
+  Step 5.4: Update Service to Use Client Configuration
+
+  Purpose: Change Service to connect as client instead of hosting silos.
+
+  Update OrleansVoting.Service/AppHost.cs:
+
+  BEFORE:
+  builder.UseOrleans();
+
+  AFTER:
+  builder.UseOrleansClient();
+
+  Remove Grain References:
+
+  Update OrleansVoting.Service.csproj - REMOVE:
+  <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
+
+  Service should now ONLY reference Contracts, not Grains.
+
+  Build:
+  dotnet build OrleansVoting.Service
+
+  Expected: Build succeeds (Service no longer needs grain implementations)
+
+  ---
+  Step 5.5: Update AppHost Configuration
+
+  Purpose: Ensure Service connects to Silo cluster as client.
+
+  Update OrleansVoting.AppHost/Program.cs:
+  var builder = DistributedApplication.CreateBuilder(args);
+
+  var redis = builder.AddRedis("voting-redis");
+
+  var orleans = builder.AddOrleans("voting-cluster")
+      .WithClustering(redis)
+      .WithGrainStorage("votes", redis);
+
+  // Dedicated silo instances (grain hosting)
+  var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
+      .WithReference(orleans)
+      .WithReplicas(3);  // Increased from 2
+
+  // Web frontend (Orleans client only)
+  builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
+      .WithReference(orleans)  // Connects as client
+      .WaitFor(silo)  // Must wait for at least one silo
+      .WithReplicas(3)
+      .WithExternalHttpEndpoints();
+
+  builder.Build().Run();
+
+  Key Changes:
+  - Service now depends on Silo being available
+  - Service is pure client, doesn't host grains
+
+  ---
+  Step 5.6: Test the Separation
+
+  Run tests:
+  dotnet test
+
+  Expected:
+  - ⚠️ Some tests might fail if they assume Service hosts grains
+  - ✅ Grain unit tests should still pass (use TestCluster)
+  - ✅ Service layer tests should pass (use mocks)
+  - ⚠️ Integration tests might need updating
+
+  Fix Failing Integration Tests:
+
+  If integration tests fail, update them to start both silo and client:
+
+  public class IntegrationTestFixture : IAsyncLifetime
+  {
+      public TestCluster Cluster { get; private set; }
+      public IHost ClientHost { get; private set; }
+
+      public async Task InitializeAsync()
+      {
+          // Start silo cluster
+          var builder = new TestClusterBuilder();
+          builder.AddSiloBuilderConfigurator<SiloConfigurator>();
+          Cluster = builder.Build();
+          await Cluster.DeployAsync();
+
+          // Start client
+          var clientBuilder = Host.CreateApplicationBuilder();
+          clientBuilder.UseOrleansClient(client =>
+          {
+              client.UseLocalhostClustering();
+          });
+          ClientHost = clientBuilder.Build();
+          await ClientHost.StartAsync();
+      }
+
+      public async Task DisposeAsync()
+      {
+          await ClientHost?.StopAsync();
+          await Cluster?.StopAsync();
+          Cluster?.Dispose();
+      }
+  }
+
+  Success Criteria:
+  - ✅ All tests green again
+  - ✅ Tests correctly model silo/client separation
+
+  ---
+  Step 5.7: Manual End-to-End Test
+
+  Run the application:
+  dotnet run --project OrleansVoting.AppHost
+
+  Test Checklist:
+  - ✅ Aspire dashboard shows voting-silo (3 replicas) running
+  - ✅ Aspire dashboard shows voting-fe (3 replicas) running
+  - ✅ Open web UI from dashboard
+  - ✅ Create a new poll
+  - ✅ Vote on poll
+  - ✅ Verify real-time updates work
+  - ✅ Try demo features
+  - ✅ Verify throttling still works
+
+  If any manual test fails:
+  1. Stop immediately
+  2. Check logs in Aspire dashboard
+  3. Verify silo is healthy
+  4. Verify client can connect to cluster
+  5. Fix issue before proceeding
+
+  Success Criteria:
+  - ✅ Full application works
+  - ✅ Service is pure client (no grain implementations)
+  - ✅ Silos host all grains
+  - ✅ All automated tests pass
+
+  ---
+  Phase 6: Rename and Finalize Structure
+
+  Goal: Clean up naming to reflect new architecture.
+
+  Step 6.1: Rename Service to WebApp
+
+  Actions:
+  # Rename project folder
+  mv OrleansVoting.Service OrleansVoting.WebApp
+
+  # Rename project file
+  mv OrleansVoting.WebApp/OrleansVoting.Service.csproj OrleansVoting.WebApp/OrleansVoting.WebApp.csproj
+
+  # Update namespace in all .cs files
+  # Change: namespace OrleansVoting.Service
+  # To: namespace OrleansVoting.WebApp
+
+  Update solution:
+  dotnet sln OrleansVoting.sln remove OrleansVoting.Service/OrleansVoting.Service.csproj
+  dotnet sln OrleansVoting.sln add OrleansVoting.WebApp/OrleansVoting.WebApp.csproj
+
+  Update AppHost references:
+
+  Update OrleansVoting.AppHost.csproj:
+  <!-- Change from -->
+  <ProjectReference Include="..\OrleansVoting.Service\OrleansVoting.Service.csproj" />
+  <!-- To -->
+  <ProjectReference Include="..\OrleansVoting.WebApp\OrleansVoting.WebApp.csproj" />
+
+  Update OrleansVoting.AppHost/Program.cs:
+  // Change from
+  builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
+  // To
+  builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
+
+  Update test references:
+
+  Update OrleansVoting.Tests.csproj:
+  <ProjectReference Include="..\OrleansVoting.WebApp\OrleansVoting.WebApp.csproj" />
+
+  Build and test:
+  dotnet build
+  dotnet test
+
+  Success Criteria:
+  - ✅ Solution builds
+  - ✅ All tests pass
+  - ✅ Project renamed successfully
+
+  ---
+  Step 6.2: Final Verification
+
+  Run full test suite:
+  dotnet test --logger "console;verbosity=detailed"
+
+  Run application:
+  dotnet run --project OrleansVoting.AppHost
+
+  Complete Manual Test Plan:
+  1. ✅ Navigate to web UI
+  2. ✅ Create poll with 3 options
+  3. ✅ Vote on option
+  4. ✅ Open in second browser/incognito
+  5. ✅ Vote from second browser
+  6. ✅ Verify first browser sees update in real-time
+  7. ✅ Test throttling by rapid clicking
+  8. ✅ Test double-vote protection
+  9. ✅ Test demo features
+  10. ✅ Check Aspire dashboard health metrics
+  11. ✅ Verify all replicas are healthy
+  12. ✅ Check OpenTelemetry traces
+
+  Success Criteria:
+  - ✅ All manual tests pass
+  - ✅ All automated tests pass
+  - ✅ Architecture matches production design
+  - ✅ Clear separation: Contracts, Grains, Silo, WebApp
+  - ✅ Aspire orchestrates correctly
+
+  ---
+  Phase 7: Update Documentation
+
+  Step 7.1: Update CLAUDE.md
+
+  Actions:
+  Update OrleansVoting/CLAUDE.md to reflect new architecture:
+
+  ## Project Structure
+
+  **OrleansVoting.Contracts** - Grain interfaces and DTOs
+  - Pure contracts, no implementations
+  - Referenced by all projects
+  - Defines the grain API surface
+
+  **OrleansVoting.Grains** - Grain implementations
+  - Business logic
+  - Referenced ONLY by Silo projects
+  - Not accessible to client applications
+
+  **OrleansVoting.Silo** - Dedicated Orleans silo host
+  - Headless compute tier
+  - Hosts grain activations
+  - No public HTTP endpoints
+  - Scales independently for computation
+
+  **OrleansVoting.WebApp** - Blazor frontend (Orleans client)
+  - Presentation tier
+  - Connects to Orleans cluster as client
+  - No grain implementations
+  - Scales independently for HTTP traffic
+
+  **OrleansVoting.ServiceDefaults** - Shared Aspire configuration
+  - OpenTelemetry with Orleans instrumentation
+  - Health checks and service discovery
+
+  **OrleansVoting.AppHost** - Aspire orchestration
+  - Configures separate silo and web tiers
+  - Redis for clustering and persistence
+
+  ## Common Commands
+
+  ### Running the Application
+  ```bash
+  dotnet run --project OrleansVoting.AppHost
+  Starts:
+  - Redis
+  - 3 Silo replicas (grain hosting)
+  - 3 WebApp replicas (HTTP frontend)
+
+  Running Tests
+
+  dotnet test
+
+  Building
+
+  dotnet build OrleansVoting.sln
+
+  Testing Strategy
+
+  Grain Unit Tests (OrleansVoting.Tests/Grains/)
+
+  - Test grain behavior using TestCluster
+  - Verify business logic in isolation
+  - Test persistence, observers, throttling
+
+  Service Layer Tests (OrleansVoting.Tests/Services/)
+
+  - Test PollService with mocked grains
+  - Verify service layer orchestration
+
+  Component Tests (OrleansVoting.Tests/Components/)
+
+  - Test Blazor components using bUnit
+  - Verify UI behavior with mocked services
+
+  Integration Tests (OrleansVoting.Tests/Integration/)
+
+  - End-to-end tests with real Orleans cluster
+  - Verify full system behavior
+
+  Architecture Notes
+
+  Client vs Silo
+
+  - Silo hosts grains, uses builder.UseOrleans()
+  - Client connects to cluster, uses builder.UseOrleansClient()
+  - WebApp is client-only, doesn't host grains
+
+  Scaling
+
+  - Scale Silo for computation/grain workload
+  - Scale WebApp for HTTP traffic
+  - Independent scaling per tier
+
+  Testing Grains
+
+  - Use TestCluster for grain tests
+  - Don't mock grains in grain tests
+  - Mock grains in service/component tests
+
+  ---
+
+  ### Step 7.2: Update README.md
+
+  **Actions:**
+  Update README.md to mention the production architecture:
+
+  ```markdown
+  ## Architecture
+
+  This sample demonstrates a **production-ready architecture** with clear separation:
+
+  - **Contracts**: Grain interfaces and DTOs
+  - **Grains**: Business logic implementations
+  - **Silo**: Dedicated grain hosting tier
+  - **WebApp**: Blazor frontend as Orleans client
+
+  The architecture allows:
+  - Independent scaling of compute (Silo) vs HTTP (WebApp)
+  - Multiple client types (Web, API, Mobile)
+  - Clear contract boundaries
+  - Independent deployment of UI and business logic
+
+  ---
+  Final Checklist
+
+  Code Quality
+
+  - ✅ All tests pass
+  - ✅ No compiler warnings
+  - ✅ Proper separation of concerns
+  - ✅ Clear project boundaries
+
+  Functionality
+
+  - ✅ Can create polls
+  - ✅ Can vote on polls
+  - ✅ Real-time updates work
+  - ✅ Throttling enforced
+  - ✅ Double-vote prevented
+  - ✅ Observer pattern works
+
+  Architecture
+
+  - ✅ Contracts: interfaces only
+  - ✅ Grains: implementations only
+  - ✅ Silo: grain hosting only
+  - ✅ WebApp: UI + Orleans client only
+  - ✅ Clear dependencies (no circular references)
+
+  Testing
+
+  - ✅ Grain unit tests (>90% coverage)
+  - ✅ Service layer tests (>85% coverage)
+  - ✅ Component tests (>75% coverage)
+  - ✅ Integration smoke tests
+  - ✅ All tests green
+
+  Documentation
+
+  - ✅ CLAUDE.md updated
+  - ✅ README.md updated
+  - ✅ Architecture documented
+  - ✅ Testing strategy documented
+
+  ---
+  Risk Mitigation Summary
+
+  How This Plan Minimizes Risk:
+
+  1. Test-First: Every change has tests that will catch regressions
+  2. Incremental: Small steps, verify after each
+  3. Reversible: Backup checkpoints at critical junctions
+  4. Parallel Deployment: Run old and new side-by-side before cutting over
+  5. Automated Verification: Tests prevent silent breakage
+  6. Manual Verification: Human validation of critical paths
+
+  If Something Goes Wrong:
+  1. Tests will fail (catching the issue)
+  2. Revert to last checkpoint
+  3. Investigate failure
+  4. Fix issue
+  5. Verify tests pass
+  6. Continue
+
+  ---
+  This plan ensures you can refactor with confidence, knowing every change is protected by tests that will alert you immediately if behavior changes
+  unexpectedly.
+
+
+

@@ -1132,9 +1132,25 @@ dotnet test
 
 **Goal:** Remove silo hosting from Service, make it pure Orleans client.
 
-### Step 5.1: Add Tests for Client-Only Configuration
+### Step 5.1: Add Tests for Client-Only Configuration ✅ (2025-10-20)
 
 **Purpose:** Verify service can work as pure client before removing silo code.
+
+**Created OrleansVoting.Tests/Hosting/ClientHostTests.cs:**
+- Test 1: `Client_CanConnect_ToSilo` - Verifies basic client-to-silo connection
+- Test 2: `Client_CanCallMultipleGrains_OnSilo` - Verifies client can call multiple grains
+
+**Test Results:**
+```
+✅ 2 tests passed
+✅ Full test suite: 29 tests (28 pass, 1 known flaky timing test)
+✅ Verified client-only configuration works correctly
+```
+
+**Success Criteria:**
+- ✅ Client host tests pass
+- ✅ Demonstrates client-only configuration works
+- ✅ No regressions in existing tests
 
 **Tests to Write (OrleansVoting.Tests/Hosting/ClientHostTests.cs):**
 ```csharp
