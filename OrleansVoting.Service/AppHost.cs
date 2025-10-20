@@ -10,6 +10,13 @@ var redisConnectionName = builder.Configuration.GetConnectionString("voting-redi
 // Configure as Orleans client (no grain hosting)
 builder.UseOrleansClient(client =>
 {
+    // Must match the cluster configuration from AppHost
+    client.Configure<Orleans.Configuration.ClusterOptions>(options =>
+    {
+        options.ClusterId = "voting-cluster";
+        options.ServiceId = "voting-cluster";
+    });
+    
     // Only configure clustering for client - no storage needed
     client.UseRedisClustering(redisConnectionName);
 });
