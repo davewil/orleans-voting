@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Contracts", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Grains", "OrleansVoting.Grains\OrleansVoting.Grains.csproj", "{715CB727-D178-48BE-A1B2-87E0649EF35B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Silo", "OrleansVoting.Silo\OrleansVoting.Silo.csproj", "{715BD57F-DA12-49BA-984B-F713AC6BFA5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,18 @@ Global
 		{715CB727-D178-48BE-A1B2-87E0649EF35B}.Release|x64.Build.0 = Release|Any CPU
 		{715CB727-D178-48BE-A1B2-87E0649EF35B}.Release|x86.ActiveCfg = Release|Any CPU
 		{715CB727-D178-48BE-A1B2-87E0649EF35B}.Release|x86.Build.0 = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|x64.Build.0 = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Debug|x86.Build.0 = Debug|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|x64.ActiveCfg = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|x64.Build.0 = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{715BD57F-DA12-49BA-984B-F713AC6BFA5D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
