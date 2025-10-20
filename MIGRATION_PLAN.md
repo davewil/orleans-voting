@@ -1681,6 +1681,629 @@ The architecture allows:
 
 ---
 
+## Phase 8: Create REST API Layer (Optional - For React/Mobile Clients)
+
+**Goal:** Create a thin HTTP API layer that can serve multiple client types (React, mobile apps, etc.) while maintaining the existing Blazor UI.
+
+**Why This Phase:**
+- Enables non-.NET clients (React, Vue, mobile apps) to consume the voting system
+- API can be tested using existing Blazor app as proof-of-concept
+- Demonstrates multi-client architecture pattern
+- No changes needed to Contracts, Grains, or Silo layers
+
+**Architecture After Phase 8:**
+```
+┌─────────────────────┐
+│  Blazor WebApp      │ ← Existing (can migrate to use API)
+│  (Direct Orleans)   │
+└──────────┬──────────┘
+           │
+           ├─────────────────────┐
+           │                     │
+           ▼                     ▼
+┌──────────────────┐   ┌─────────────────────┐
+│ Orleans Silos    │   │  REST API           │ ← NEW
+│ (Grain hosting)  │   │  (Orleans client)   │
+└──────────────────┘   └──────────┬──────────┘
+                                  │
+                                  ▼
+                       ┌─────────────────────┐
+                       │  React/Mobile App   │ ← Future
+                       └─────────────────────┘
+```
+
+### Step 8.1: Add Tests for API Controllers
+
+**Purpose:** Test-first! Verify API endpoints work before we create Blazor integration or React app.
+
+**Tests to Write (OrleansVoting.Tests/Api/PollsApiTests.cs):**
+```csharp
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Orleans.TestingHost;
+using OrleansVoting.Contracts.Grains;
+using System.Net;
+using System.Net.Http.Json;
+
+namespace OrleansVoting.Tests.Api;
+
+public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
+{
+    private readonly TestCluster _cluster;
+    private WebApplicationFactory<Program>? _factory;
+    private HttpClient? _client;
+
+    public PollsApiTests(TestClusterFixture fixture)
+    {
+        _cluster = fixture.Cluster;
+    }
+
+    public async Task InitializeAsync()
+    {
+        // Setup will create API app with test cluster
+        // Details in Step 8.2
+    }
+
+    public async Task DisposeAsync()
+    {
+        _client?.Dispose();
+        _factory?.Dispose();
+    }
+
+    [Fact]
+    public async Task POST_Polls_CreatesPoll_ReturnsId()
+    {
+        // Arrange
+        var request = new
+        {
+            Question = "Favorite color?",
+            Options = new[] { "Red", "Blue", "Green" }
+        };
+
+        // Act
+        var response = await _client!.PostAsJsonAsync("/api/polls", request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<CreatePollResponse>();
+        result!.PollId.Should().NotBeNullOrEmpty();
+        result.PollId.Length.Should().Be(6);
+    }
+
+    [Fact]
+    public async Task GET_Polls_Id_ReturnsPollResults()
+    {
+        // Arrange - Create a poll first
+        var createRequest = new
+        {
+            Question = "Test?",
+            Options = new[] { "A", "B" }
+        };
+        var createResponse = await _client!.PostAsJsonAsync("/api/polls", createRequest);
+        var created = await createResponse.Content.ReadFromJsonAsync<CreatePollResponse>();
+
+        // Act - Get the poll
+        var response = await _client.GetAsync($"/api/polls/{created!.PollId}");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var poll = await response.Content.ReadFromJsonAsync<PollResultsResponse>();
+        poll!.Question.Should().Be("Test?");
+        poll.Options.Should().HaveCount(2);
+        poll.Voted.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task POST_Polls_Id_Vote_RecordsVote()
+    {
+        // Arrange - Create poll
+        var createRequest = new
+        {
+            Question = "Test?",
+            Options = new[] { "A", "B" }
+        };
+        var createResponse = await _client!.PostAsJsonAsync("/api/polls", createRequest);
+        var created = await createResponse.Content.ReadFromJsonAsync<CreatePollResponse>();
+
+        // Act - Vote
+        var voteRequest = new { OptionIndex = 0 };
+        var voteResponse = await _client.PostAsJsonAsync(
+            $"/api/polls/{created!.PollId}/vote",
+            voteRequest);
+
+        // Assert
+        voteResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await voteResponse.Content.ReadFromJsonAsync<PollResultsResponse>();
+        result!.Options[0].Votes.Should().Be(1);
+        result.Voted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task POST_Polls_Id_Vote_DoubleVote_Returns400()
+    {
+        // Arrange - Create poll and vote once
+        var createRequest = new
+        {
+            Question = "Test?",
+            Options = new[] { "A" }
+        };
+        var createResponse = await _client!.PostAsJsonAsync("/api/polls", createRequest);
+        var created = await createResponse.Content.ReadFromJsonAsync<CreatePollResponse>();
+        var voteRequest = new { OptionIndex = 0 };
+        await _client.PostAsJsonAsync($"/api/polls/{created!.PollId}/vote", voteRequest);
+
+        // Act - Try to vote again
+        var response = await _client.PostAsJsonAsync(
+            $"/api/polls/{created.PollId}/vote",
+            voteRequest);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task POST_Polls_Throttling_Returns429()
+    {
+        // Arrange - Make 10 requests (at threshold)
+        for (int i = 0; i < 10; i++)
+        {
+            var request = new
+            {
+                Question = $"Poll {i}?",
+                Options = new[] { "A" }
+            };
+            await _client!.PostAsJsonAsync("/api/polls", request);
+        }
+
+        // Act - 11th request should be throttled
+        var finalRequest = new
+        {
+            Question = "Poll 11?",
+            Options = new[] { "A" }
+        };
+        var response = await _client!.PostAsJsonAsync("/api/polls", finalRequest);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.TooManyRequests);
+    }
+}
+
+// DTOs for API responses
+public record CreatePollResponse(string PollId);
+public record PollResultsResponse(
+    string Question,
+    List<OptionDto> Options,
+    bool Voted);
+public record OptionDto(string Text, int Votes);
+```
+
+**Success Criteria:**
+- ✅ Tests compile (even though API doesn't exist yet)
+- ✅ Tests define expected API contract
+- ✅ Tests cover: create, get, vote, double-vote, throttling
+
+---
+
+### Step 8.2: Create API Project
+
+**Actions:**
+```bash
+dotnet new webapi -n OrleansVoting.Api -minimal
+cd OrleansVoting.Api
+dotnet add package Microsoft.Orleans.Client
+dotnet add reference ../OrleansVoting.Contracts/OrleansVoting.Contracts.csproj
+dotnet add reference ../OrleansVoting.ServiceDefaults/OrleansVoting.ServiceDefaults.csproj
+dotnet sln ../OrleansVoting.sln add OrleansVoting.Api.csproj
+```
+
+**Create OrleansVoting.Api/Program.cs:**
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using Orleans;
+using OrleansVoting.Api;
+using OrleansVoting.Contracts.Grains;
+using OrleansVoting.Contracts.Exceptions;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
+
+// Configure as Orleans client (same as Service/WebApp)
+builder.UseOrleansClient(client =>
+{
+    var clusterId = builder.Configuration["Orleans:ClusterOptions:ClusterId"] ?? "voting-cluster";
+    var serviceId = builder.Configuration["Orleans:ClusterOptions:ServiceId"] ?? "voting-app";
+    var redisConn = builder.Configuration.GetConnectionString("voting-redis")
+        ?? throw new InvalidOperationException("Redis connection string is required");
+
+    client.Configure<Orleans.Configuration.ClusterOptions>(o =>
+    {
+        o.ClusterId = clusterId;
+        o.ServiceId = serviceId;
+    });
+
+    client.UseRedisClustering(o =>
+    {
+        o.ConfigurationOptions = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
+    });
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+var app = builder.Build();
+
+app.MapDefaultEndpoints();
+app.UseCors();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// Minimal API endpoints
+var polls = app.MapGroup("/api/polls");
+
+polls.MapPost("/", async (
+    [FromBody] CreatePollRequest request,
+    [FromServices] IGrainFactory grainFactory,
+    HttpContext context) =>
+{
+    try
+    {
+        var clientId = GetClientId(context);
+        var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
+
+        var pollId = await userGrain.CreatePoll(new PollState
+        {
+            Question = request.Question,
+            Options = request.Options.Select(o => (o, 0)).ToList()
+        });
+
+        return Results.Ok(new CreatePollResponse(pollId));
+    }
+    catch (ThrottlingException ex)
+    {
+        return Results.StatusCode(429); // Too Many Requests
+    }
+    catch (InvalidOperationException ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+});
+
+polls.MapGet("/{pollId}", async (
+    string pollId,
+    [FromServices] IGrainFactory grainFactory,
+    HttpContext context) =>
+{
+    var clientId = GetClientId(context);
+    var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
+
+    var (results, voted) = await userGrain.GetPollResults(pollId);
+
+    return Results.Ok(new PollResultsResponse(
+        results.Question,
+        results.Options.Select(o => new OptionDto(o.Item1, o.Item2)).ToList(),
+        voted
+    ));
+});
+
+polls.MapPost("/{pollId}/vote", async (
+    string pollId,
+    [FromBody] VoteRequest request,
+    [FromServices] IGrainFactory grainFactory,
+    HttpContext context) =>
+{
+    try
+    {
+        var clientId = GetClientId(context);
+        var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
+
+        var result = await userGrain.AddVote(pollId, request.OptionIndex);
+
+        return Results.Ok(new PollResultsResponse(
+            result.Question,
+            result.Options.Select(o => new OptionDto(o.Item1, o.Item2)).ToList(),
+            true
+        ));
+    }
+    catch (InvalidOperationException ex)
+    {
+        return Results.BadRequest(new { error = ex.Message });
+    }
+});
+
+app.Run();
+
+static string GetClientId(HttpContext context)
+{
+    // Use IP address as client identifier
+    // In production, you might use authenticated user ID or session cookies
+    return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+}
+
+// DTOs
+public record CreatePollRequest(string Question, List<string> Options);
+public record CreatePollResponse(string PollId);
+public record PollResultsResponse(string Question, List<OptionDto> Options, bool Voted);
+public record OptionDto(string Text, int Votes);
+public record VoteRequest(int OptionIndex);
+
+// Required for WebApplicationFactory in tests
+public partial class Program { }
+```
+
+**Verification:**
+```bash
+dotnet build OrleansVoting.Api
+```
+
+**Success Criteria:**
+- ✅ API project builds
+- ✅ No references to Grains (only Contracts)
+- ✅ Uses Orleans client (not server)
+
+---
+
+### Step 8.3: Run API Tests
+
+**Update OrleansVoting.Tests.csproj:**
+```xml
+<ItemGroup>
+  <ProjectReference Include="..\OrleansVoting.Api\OrleansVoting.Api.csproj" />
+</ItemGroup>
+```
+
+**Complete the test fixture from Step 8.1:**
+```csharp
+public async Task InitializeAsync()
+{
+    // Create API factory with test Orleans cluster
+    _factory = new WebApplicationFactory<Program>()
+        .WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                // Replace Orleans client with test cluster's grain factory
+                services.AddSingleton<IGrainFactory>(_cluster.GrainFactory);
+            });
+        });
+
+    _client = _factory.CreateClient();
+}
+```
+
+**Run tests:**
+```bash
+dotnet test --filter "FullyQualifiedName~PollsApiTests"
+```
+
+**Success Criteria:**
+- ✅ All 5 API tests pass
+- ✅ Verifies create, get, vote, double-vote prevention, throttling
+- ✅ API works with Orleans grains
+
+---
+
+### Step 8.4: Add to AppHost (Optional - for testing)
+
+**Update OrleansVoting.AppHost/Program.cs:**
+```csharp
+var builder = DistributedApplication.CreateBuilder(args);
+
+var redis = builder.AddRedis("voting-redis");
+
+const string clusterId = "voting-cluster";
+const string serviceId = "voting-app";
+
+// Dedicated silo instances (grain hosting)
+var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
+    .WithReplicas(3);
+
+// Blazor Web frontend (Orleans client - existing)
+builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
+    .WaitFor(silo)
+    .WithReplicas(2)
+    .WithExternalHttpEndpoints();
+
+// REST API (Orleans client - NEW, optional for testing)
+builder.AddProject<Projects.OrleansVoting_Api>("voting-api")
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
+    .WaitFor(silo)
+    .WithReplicas(2)
+    .WithExternalHttpEndpoints();
+
+builder.Build().Run();
+```
+
+**Verification:**
+```bash
+dotnet run --project OrleansVoting.AppHost
+```
+
+**Manual Testing:**
+- ✅ Navigate to voting-api Swagger UI from Aspire dashboard
+- ✅ Test POST /api/polls (create poll)
+- ✅ Test GET /api/polls/{id} (get poll)
+- ✅ Test POST /api/polls/{id}/vote (vote)
+- ✅ Verify Blazor app still works independently
+
+---
+
+### Step 8.5: Proof-of-Concept: Update Blazor App to Use API (Optional)
+
+**Purpose:** Prove the API works by consuming it from the existing Blazor app instead of direct Orleans calls.
+
+**Why this is valuable:**
+- Validates API works for real clients
+- Demonstrates migration path from Orleans client to HTTP client
+- Shows API is production-ready before building React app
+
+**Create OrleansVoting.Service/Services/HttpPollService.cs:**
+```csharp
+using System.Net.Http.Json;
+
+namespace OrleansVoting.Data;
+
+public class HttpPollService
+{
+    private readonly HttpClient _httpClient;
+
+    public HttpPollService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    public async Task<string> CreatePollAsync(string question, List<string> options)
+    {
+        var request = new { Question = question, Options = options };
+        var response = await _httpClient.PostAsJsonAsync("/api/polls", request);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<CreatePollResponse>();
+        return result!.PollId;
+    }
+
+    public async Task<(PollResultsResponse Results, bool Voted)> GetPollResultsAsync(string pollId)
+    {
+        var response = await _httpClient.GetAsync($"/api/polls/{pollId}");
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<PollResultsResponse>();
+        return (result!, result!.Voted);
+    }
+
+    public async Task<PollResultsResponse> AddVoteAsync(string pollId, int optionIndex)
+    {
+        var request = new { OptionIndex = optionIndex };
+        var response = await _httpClient.PostAsJsonAsync($"/api/polls/{pollId}/vote", request);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<PollResultsResponse>();
+    }
+
+    // DTOs matching API responses
+    public record CreatePollResponse(string PollId);
+    public record PollResultsResponse(string Question, List<OptionDto> Options, bool Voted);
+    public record OptionDto(string Text, int Votes);
+}
+```
+
+**Update OrleansVoting.Service/AppHost.cs:**
+```csharp
+// Add HTTP client for API
+builder.Services.AddHttpClient<HttpPollService>(client =>
+{
+    var apiUrl = builder.Configuration["ApiUrl"] ?? "http://localhost:5001";
+    client.BaseAddress = new Uri(apiUrl);
+});
+
+// Option 1: Keep using Orleans directly (current behavior)
+builder.Services.AddScoped<PollService>();
+
+// Option 2: Use API instead (uncomment to switch)
+// builder.Services.AddScoped<PollService>(sp =>
+//     new HttpPollServiceAdapter(sp.GetRequiredService<HttpPollService>()));
+```
+
+**Verification:**
+- ✅ Blazor app works with both direct Orleans AND via API
+- ✅ Can switch between implementations without UI changes
+- ✅ Proves API is functionally equivalent
+
+---
+
+### Step 8.6: Final Verification
+
+**Run full test suite:**
+```bash
+dotnet test
+```
+
+**Expected Results:**
+- ✅ All existing tests pass (grain, service, component, integration)
+- ✅ New API tests pass (5 additional tests)
+- ✅ Total: 34 tests passing
+
+**Manual Verification:**
+```bash
+dotnet run --project OrleansVoting.AppHost
+```
+
+**Test Checklist:**
+- ✅ Aspire dashboard shows: Silo (3), Service (2), API (2)
+- ✅ All services healthy
+- ✅ Blazor app works (direct Orleans)
+- ✅ Swagger UI accessible for API
+- ✅ Can create poll via API
+- ✅ Can vote via API
+- ✅ API endpoints respect throttling and double-vote rules
+
+**Success Criteria:**
+- ✅ REST API layer complete and tested
+- ✅ No changes to Contracts, Grains, or Silo
+- ✅ API can serve as foundation for React/mobile apps
+- ✅ Blazor app unaffected (still using direct Orleans)
+- ✅ All tests green
+
+---
+
+## Phase 8 Summary
+
+**What We Built:**
+- ✅ Minimal REST API project (OrleansVoting.Api)
+- ✅ Three core endpoints: Create Poll, Get Poll, Vote
+- ✅ Comprehensive API tests
+- ✅ Swagger/OpenAPI documentation
+- ✅ CORS support for browser clients
+- ✅ Same authentication/session handling as Blazor app
+
+**Architecture Benefits:**
+- Multiple client types supported (Blazor, React, Mobile)
+- API can scale independently
+- Blazor app can migrate to API gradually (or stay on Orleans)
+- Clean separation: UI logic vs business logic
+
+**Next Steps (Outside This Migration):**
+- Build React frontend consuming this API
+- Add SignalR hub for real-time updates
+- Add GraphQL layer (alternative to REST)
+- Add authentication/authorization
+- Add API rate limiting middleware
+
+**Current Architecture:**
+```
+┌─────────────┐  ┌─────────────┐  ┌─────────────┐
+│   Blazor    │  │  REST API   │  │ Future:     │
+│   WebApp    │  │  (tested)   │  │ React/Mobile│
+└──────┬──────┘  └──────┬──────┘  └──────┬──────┘
+       │                │                │
+       └────────────────┴────────────────┘
+                        │
+                ┌───────▼───────┐
+                │ Orleans Silos │
+                │ (Grains)      │
+                └───────────────┘
+```
+
+---
+
 ## Final Checklist
 
 ### Code Quality
