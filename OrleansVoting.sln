@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Tests", "Orle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Tests.UI", "OrleansVoting.Tests.UI\OrleansVoting.Tests.UI.csproj", "{397B60AA-6184-4169-90B9-A60879BA2D63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrleansVoting.Contracts", "OrleansVoting.Contracts\OrleansVoting.Contracts.csproj", "{5C99CC4C-25E8-4515-A572-DDD0883D443E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +90,18 @@ Global
 		{397B60AA-6184-4169-90B9-A60879BA2D63}.Release|x64.Build.0 = Release|Any CPU
 		{397B60AA-6184-4169-90B9-A60879BA2D63}.Release|x86.ActiveCfg = Release|Any CPU
 		{397B60AA-6184-4169-90B9-A60879BA2D63}.Release|x86.Build.0 = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|x64.Build.0 = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Debug|x86.Build.0 = Debug|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|x64.ActiveCfg = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|x64.Build.0 = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C99CC4C-25E8-4515-A572-DDD0883D443E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
