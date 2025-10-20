@@ -1250,17 +1250,20 @@ public static class OrleansExtensions
 
 ---
 
-### Step 5.3: Create Backup of Current Service
+### Step 5.3: Create Backup of Current Service ✅ (2025-10-20)
 
 **Actions:**
 ```bash
 # Create a backup branch
-git add -A
-git commit -m "Checkpoint: Before converting Service to client-only"
 git branch backup/service-with-silo
 ```
 
 **Purpose:** Safety net if we need to revert.
+
+**Verification:**
+- ✅ Backup branch `backup/service-with-silo` created at commit 7f150bf
+- ✅ Branch preserves current working state with Service hosting silos
+- ✅ Can revert to this branch if needed: `git checkout backup/service-with-silo`
 
 ---
 
