@@ -1318,9 +1318,27 @@ dotnet build OrleansVoting.Service
 
 ---
 
-### Step 5.5: Update AppHost Configuration
+### Step 5.5: Update AppHost Configuration ✅ (2025-10-20)
 
 **Purpose:** Ensure Service connects to Silo cluster as client.
+
+**Changes Made:**
+
+1. **Updated comments** to reflect new architecture:
+   - "Dedicated silo instances (grain hosting)" instead of "NEW: Dedicated silo instances"
+   - "Web frontend (Orleans client only)" instead of "EXISTING: Service with embedded silo"
+
+2. **Increased Silo replicas** from 2 to 3 for better availability
+
+3. **Added `.WaitFor(silo)`** to ensure Service waits for at least one Silo to be ready before starting
+
+4. **Removed `.WaitFor(redis)`** from Service (Redis is already waited for by Silo)
+
+**Verification:**
+- ✅ AppHost builds successfully
+- ✅ All tests pass (29 total, 1 known flaky timing test)
+- ✅ Service now properly depends on Silo being available
+- ✅ Full Aspire application is now runnable with proper startup ordering
 
 **Update OrleansVoting.AppHost/Program.cs:**
 ```csharp

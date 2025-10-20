@@ -6,15 +6,15 @@ var orleans = builder.AddOrleans("voting-cluster")
     .WithClustering(redis)
     .WithGrainStorage("votes", redis);
 
-// NEW: Dedicated silo instances
+// Dedicated silo instances (grain hosting)
 var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
     .WithReference(orleans)
-    .WithReplicas(2);  // Start with 2 replicas
+    .WithReplicas(3);
 
-// EXISTING: Service with embedded silo (still running!)
+// Web frontend (Orleans client only)
 builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
-    .WithReference(orleans)
-    .WaitFor(redis)
+    .WithReference(orleans)  // Connects as client
+    .WaitFor(silo)  // Must wait for at least one silo
     .WithReplicas(3)
     .WithExternalHttpEndpoints();
 
