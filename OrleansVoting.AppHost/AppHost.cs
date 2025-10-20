@@ -13,7 +13,7 @@ var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
 
 // Web frontend (Orleans client only)
 builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
-    .WithReference(redis)  // Only needs Redis for client clustering
+    .WithReference(orleans)  // Get full Orleans config (clustering + cluster ID)
     .WaitFor(silo)  // Must wait for at least one silo
     .WithReplicas(3)
     .WithExternalHttpEndpoints();

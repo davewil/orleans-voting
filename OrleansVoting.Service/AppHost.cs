@@ -4,22 +4,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-var redisConnectionName = builder.Configuration.GetConnectionString("voting-redis")
-    ?? throw new InvalidOperationException("Redis connection string is required");
-
 // Configure as Orleans client (no grain hosting)
-builder.UseOrleansClient(client =>
-{
-    // Must match the cluster configuration from AppHost
-    client.Configure<Orleans.Configuration.ClusterOptions>(options =>
-    {
-        options.ClusterId = "voting-cluster";
-        options.ServiceId = "voting-cluster";
-    });
-    
-    // Only configure clustering for client - no storage needed
-    client.UseRedisClustering(redisConnectionName);
-});
+// Clustering and cluster configuration will come from Aspire via .WithReference(orleans)
+Microsoft.Extensions.Hosting.OrleansClientGenericHostExtensions.UseOrleansClient(builder);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
