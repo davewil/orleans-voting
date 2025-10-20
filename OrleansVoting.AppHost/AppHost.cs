@@ -11,10 +11,10 @@ var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
     .WithReference(orleans)
     .WithReplicas(3);
 
-// Web frontend (Orleans client only)
+// Web frontend (original state hosted Orleans too — but we are reverting to start of Phase 5 which still had Orleans here)
 builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
-    .WithReference(orleans)  // Get full Orleans config (clustering + cluster ID)
-    .WaitFor(silo)  // Must wait for at least one silo
+    .WithReference(orleans)
+    .WaitFor(redis)
     .WithReplicas(3)
     .WithExternalHttpEndpoints();
 
