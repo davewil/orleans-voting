@@ -2,19 +2,23 @@
 
 var redis = builder.AddRedis("voting-redis");
 
-var orleans = builder.AddOrleans("voting-cluster")
-    .WithClustering(redis)
-    .WithGrainStorage("votes", redis);
+// Shared Orleans cluster identity
+const string clusterId = "voting-cluster";
+const string serviceId = "voting-app";
 
 // Dedicated silo instances (grain hosting)
 var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
-    .WithReference(orleans)
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
     .WithReplicas(3);
 
-// Web frontend (original state hosted Orleans too — but we are reverting to start of Phase 5 which still had Orleans here)
+// Web frontend (Orleans client only)
 builder.AddProject<Projects.OrleansVoting_Service>("voting-fe")
-    .WithReference(orleans)
-    .WaitFor(redis)
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
+    .WaitFor(silo)
     .WithReplicas(3)
     .WithExternalHttpEndpoints();
 

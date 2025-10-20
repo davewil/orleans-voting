@@ -5,8 +5,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.AddKeyedRedisClient("voting-redis");
 
-// Host Orleans in the service (start-of-Phase-5 state)
-builder.UseOrleans();
+// Configure as Orleans client (no grain hosting)
+builder.UseOrleansClient(client =>
+{
+	var clusterId = builder.Configuration["Orleans:ClusterOptions:ClusterId"] ?? "voting-cluster";
+	var serviceId = builder.Configuration["Orleans:ClusterOptions:ServiceId"] ?? "voting-app";
+	var redisConn = builder.Configuration.GetConnectionString("voting-redis")
+		?? throw new InvalidOperationException("Redis connection string is required");
+
+	client.Configure<Orleans.Configuration.ClusterOptions>(o =>
+	{
+		o.ClusterId = clusterId;
+		o.ServiceId = serviceId;
+	});
+
+	client.UseRedisClustering(o =>
+	{
+		o.ConfigurationOptions = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
+	});
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
