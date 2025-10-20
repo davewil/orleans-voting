@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
 using OrleansVoting.Data;
 using OrleansVoting.Service.Pages;
 

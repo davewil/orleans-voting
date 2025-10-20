@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
+using OrleansVoting.Contracts.Exceptions;
 
 namespace Grains;
 

@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
 using OrleansVoting.Data;
 
 namespace OrleansVoting.Tests.Services;

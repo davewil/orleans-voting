@@ -1,4 +1,5 @@
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
 
 namespace OrleansVoting.Tests.Fixtures;
 

@@ -2,6 +2,7 @@
 using Orleans.Runtime;
 using Orleans.Utilities;
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
 
 namespace VotingData;
 

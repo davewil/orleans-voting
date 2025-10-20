@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Orleans;
 using OrleansVoting;
+using OrleansVoting.Contracts.Grains;
 
 namespace VotingWeb.Controllers;
 

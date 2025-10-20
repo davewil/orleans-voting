@@ -1,5 +1,7 @@
 using FluentAssertions;
 using OrleansVoting;
+using OrleansVoting.Contracts.Exceptions;
+using OrleansVoting.Contracts.Grains;
 using OrleansVoting.Tests.Fixtures;
 
 namespace OrleansVoting.Tests.Grains;

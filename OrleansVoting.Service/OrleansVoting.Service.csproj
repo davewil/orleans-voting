@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrleansVoting.ServiceDefaults\OrleansVoting.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

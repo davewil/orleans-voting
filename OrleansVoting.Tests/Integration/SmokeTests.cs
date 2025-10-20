@@ -46,9 +46,11 @@ public class SmokeTests : IClassFixture<TestClusterFixture>
         votedNow.Should().BeTrue();
     }
 
-    [Fact(Skip = "Flaky when run with full test suite due to test interference. Passes when run individually.")]
+    [Fact]
     public async Task RealTimeUpdates_ObserverReceivesNotification()
     {
+        // NOTE: This test can be flaky when run with full test suite due to timing/resource contention.
+        // If it fails, run it individually to verify it works: dotnet test --filter "FullyQualifiedName~RealTimeUpdates"
         // Arrange
         var user1 = new PollService(_fixture.Cluster.GrainFactory);
         user1.Initialize($"test-user-{Guid.NewGuid()}");
