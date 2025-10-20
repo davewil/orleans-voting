@@ -4,12 +4,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.AddKeyedRedisClient("voting-redis");
+var redisConnectionName = builder.Configuration.GetConnectionString("voting-redis")
+    ?? throw new InvalidOperationException("Redis connection string is required");
 
 // Configure as Orleans client (no grain hosting)
 builder.UseOrleansClient(client =>
 {
-    // Clustering configuration will come from Aspire via .WithReference(orleans)
+    // Only configure clustering for client - no storage needed
+    client.UseRedisClustering(redisConnectionName);
 });
 
 // Add services to the container.
