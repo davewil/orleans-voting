@@ -6,7 +6,7 @@ using OrleansVoting;
 using OrleansVoting.Data;
 using OrleansVoting.Service.Pages;
 
-namespace OrleansVoting.Tests.Components;
+namespace OrleansVoting.Tests.UI.Components;
 
 public class PollTests : TestContext
 {
