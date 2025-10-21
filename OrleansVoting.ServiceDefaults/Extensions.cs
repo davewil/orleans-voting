@@ -63,17 +63,8 @@ public static class Extensions
                     .AddHttpClientInstrumentation()
                     .AddSource("Microsoft.Orleans.Application")
                     .AddSource("Microsoft.Orleans.Runtime");
-            });
-
-        builder.AddOpenTelemetryExporters();
-
-        return builder;
-    }
-
-    private static IHostApplicationBuilder AddOpenTelemetryExporters(this IHostApplicationBuilder builder)
-    {
-        // Always add OTLP exporter in Aspire - the endpoint is automatically configured
-        builder.Services.AddOpenTelemetry().UseOtlpExporter();
+            })
+            .UseOtlpExporter(); // Export logs, metrics, and traces via OTLP
 
         return builder;
     }
