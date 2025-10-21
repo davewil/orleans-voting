@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrleansVoting.AppHost", "Or
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrleansVoting.ServiceDefaults", "OrleansVoting.ServiceDefaults\OrleansVoting.ServiceDefaults.csproj", "{CC5A0A54-8022-44D0-A59F-8F4DBDC4CA6A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrleansVoting.Service", "OrleansVoting.Service\OrleansVoting.Service.csproj", "{89B5840C-525E-4F4E-A5F1-2A1123E51AC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrleansVoting.WebApp", "OrleansVoting.WebApp\OrleansVoting.WebApp.csproj", "{89B5840C-525E-4F4E-A5F1-2A1123E51AC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12084A39-2ED4-45DF-9FBD-9FA7FA6867BF}"
 	ProjectSection(SolutionItems) = preProject

@@ -6,7 +6,7 @@ using Moq;
 using OrleansVoting;
 using OrleansVoting.Contracts.Grains;
 using OrleansVoting.Data;
-using OrleansVoting.Service.Pages;
+using OrleansVoting.WebApp.Pages;
 
 namespace OrleansVoting.Tests.UI.Components;
 

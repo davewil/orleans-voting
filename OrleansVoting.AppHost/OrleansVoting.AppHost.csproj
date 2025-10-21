@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrleansVoting.Service\OrleansVoting.Service.csproj" />
+    <ProjectReference Include="..\OrleansVoting.WebApp\OrleansVoting.WebApp.csproj" />
     <ProjectReference Include="..\OrleansVoting.Silo\OrleansVoting.Silo.csproj" />
   </ItemGroup>
 
