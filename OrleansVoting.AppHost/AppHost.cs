@@ -11,7 +11,7 @@ var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
     .WithReference(redis)
     .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
     .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
-    .WithReplicas(3);
+    .WithReplicas(1);
 
 // Web frontend (Orleans client only)
 builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
@@ -19,7 +19,7 @@ builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
     .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
     .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
     .WaitFor(silo)
-    .WithReplicas(3)
+    .WithReplicas(1)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();
