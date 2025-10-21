@@ -10,8 +10,7 @@ const string serviceId = "voting-app";
 var silo = builder.AddProject<Projects.OrleansVoting_Silo>("voting-silo")
     .WithReference(redis)
     .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
-    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
-    .WithReplicas(1);
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId);
 
 // Web frontend (Orleans client only)
 builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
@@ -19,7 +18,6 @@ builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
     .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
     .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
     .WaitFor(silo)
-    .WithReplicas(1)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

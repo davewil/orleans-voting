@@ -43,6 +43,7 @@ public static class Extensions
         });
 
         builder.Services.AddOpenTelemetry()
+            .WithLogging()
             .WithMetrics(metrics =>
             {
                 metrics.AddAspNetCoreInstrumentation()
