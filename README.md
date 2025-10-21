@@ -18,10 +18,28 @@ This is a simple .NET app that shows how to use Orleans with .NET Aspire orchest
 ## Demonstrates
 
 - How to configure a .NET Aspire app to work with Orleans
+- Production-ready architecture with separate compute and presentation tiers
+- Independent scaling of Orleans silos (grain hosting) vs web frontends (HTTP)
+- Orleans client-server pattern with multiple client types possible
+
+## Architecture
+
+This sample demonstrates a **production-ready architecture** with clear separation:
+
+- **Contracts** (`OrleansVoting.Contracts`): Grain interfaces and DTOs
+- **Grains** (`OrleansVoting.Grains`): Business logic implementations
+- **Silo** (`OrleansVoting.Silo`): Dedicated grain hosting tier (3 replicas)
+- **WebApp** (`OrleansVoting.WebApp`): Blazor frontend as Orleans client (3 replicas)
+
+The architecture allows:
+- Independent scaling of compute (Silo) vs HTTP (WebApp)
+- Multiple client types (Web, API, Mobile) can connect to the same grain cluster
+- Clear contract boundaries between tiers
+- Independent deployment of UI and business logic
 
 ## Sample prerequisites
 
-This sample is written in C# and targets .NET 8.0. It requires the [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
+This sample is written in C# and targets .NET 9.0. It requires the [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later.
 
 ## Building the sample
 
@@ -54,16 +72,16 @@ For more information about using Orleans, see the [Orleans documentation](https:
 
 ## Production deployment notes: required environment variables
 
-When deploying this sample to production (outside of the local Aspire developer orchestrator), set the following environment variables so the Silo and the Service can discover the cluster and Redis correctly. These map directly to configuration keys consumed in `OrleansVoting.Silo/Program.cs` and `OrleansVoting.Service/AppHost.cs`.
+When deploying this sample to production (outside of the local Aspire developer orchestrator), set the following environment variables so the Silo and the WebApp can discover the cluster and Redis correctly. These map directly to configuration keys consumed in `OrleansVoting.Silo/Program.cs` and `OrleansVoting.WebApp/AppHost.cs`.
 
-Required for both Silo and Service:
+Required for both Silo and WebApp:
 
 - Connection string for Redis (clustering, and storage on Silo):
     - Environment: `ConnectionStrings__voting-redis`
     - Example: `ConnectionStrings__voting-redis=redis:6380,password=...;ssl=True;abortConnect=False`
     - Used by: `builder.Configuration.GetConnectionString("voting-redis")`
 
-- Orleans Cluster identity (must match across Silo and Service):
+- Orleans Cluster identity (must match across Silo and WebApp):
     - `Orleans__ClusterOptions__ClusterId` (default: `voting-cluster`)
     - `Orleans__ClusterOptions__ServiceId` (default: `voting-app`)
     - Used by: `ClusterOptions.ClusterId` and `ClusterOptions.ServiceId`
@@ -72,7 +90,7 @@ Silo-specific:
 
 - Grain storage provider uses Redis via the same connection string. No extra env var is required beyond `ConnectionStrings__voting-redis`.
 
-Service-specific:
+WebApp-specific:
 
 - None beyond the shared variables above.
 
@@ -89,9 +107,10 @@ General ASP.NET Core hosting:
 
 Containerization tips:
 
-- Set the above environment variables in your orchestrator (Docker Compose, Kubernetes, App Service), and mount them for both the Silo and the Service.
-- Ensure network connectivity from Service to the Orleans gateways (Silo). Since clustering uses Redis, both must reach the Redis endpoint specified by `ConnectionStrings__voting-redis`.
+- Set the above environment variables in your orchestrator (Docker Compose, Kubernetes, App Service), and mount them for both the Silo and the WebApp.
+- Ensure network connectivity from WebApp to the Orleans cluster (Silo). Since clustering uses Redis, both must reach the Redis endpoint specified by `ConnectionStrings__voting-redis`.
 - Keep `ClusterId` and `ServiceId` consistent across all deployments to join the same cluster. Use unique values per environment (e.g., `voting-cluster-prod`).
+- Scale Silo replicas for grain workload, WebApp replicas for HTTP traffic.
 
 Security & secrets:
 

@@ -12,11 +12,19 @@ Orleans Voting is a sample application demonstrating Orleans distributed actor f
 ```bash
 dotnet run --project OrleansVoting.AppHost
 ```
-This starts the Aspire AppHost which orchestrates Redis and 3 replicas of the voting service.
+Starts:
+- Redis
+- 3 Silo replicas (grain hosting)
+- 3 WebApp replicas (HTTP frontend)
 
 ### Building
 ```bash
 dotnet build OrleansVoting.sln
+```
+
+### Running Tests
+```bash
+dotnet test
 ```
 
 ### Restore Dependencies
@@ -28,21 +36,45 @@ dotnet restore
 
 ### Project Structure
 
-**OrleansVoting.AppHost** - Aspire orchestration host
-- Configures Redis for Orleans clustering and grain persistence
-- Deploys 3 replicas of the voting service with load balancing
-- Entry point: `AppHost.cs`
+**OrleansVoting.Contracts** - Grain interfaces and DTOs
+- Pure contracts, no implementations
+- Referenced by all projects
+- Defines the grain API surface
+- Contains: `IPollGrain`, `IUserAgentGrain`, `IVoteGrain`, `IPollWatcher`, `PollState`, `ThrottlingException`
 
-**OrleansVoting.Service** - Web frontend and Orleans silos
+**OrleansVoting.Grains** - Grain implementations
+- Business logic for all grains
+- Referenced ONLY by Silo projects
+- Not accessible to client applications
+- Contains: `PollGrain`, `UserAgentGrain`, `VoteGrain`
+
+**OrleansVoting.Silo** - Dedicated Orleans silo host
+- Headless compute tier
+- Hosts grain activations
+- No public HTTP endpoints (only health checks)
+- Scales independently for computation
+- Entry point: `Program.cs`
+- Uses `builder.UseOrleans()` to configure silo hosting
+
+**OrleansVoting.WebApp** - Blazor frontend (Orleans client)
+- Presentation tier
 - ASP.NET Core with Blazor Server UI
-- Hosts Orleans grains in each replica
-- Entry point: `AppHost.cs` (not Program.cs)
-- Uses `builder.UseOrleans()` extension to configure Orleans integration
+- Connects to Orleans cluster as client (no grain hosting)
+- Scales independently for HTTP traffic
+- Entry point: `AppHost.cs`
+- Uses `builder.UseOrleansClient()` to configure Orleans client
 
 **OrleansVoting.ServiceDefaults** - Shared Aspire configuration
 - OpenTelemetry setup (metrics, tracing, logging) with Orleans-specific instrumentation
 - Health checks and service discovery
 - Applied via `builder.AddServiceDefaults()`
+- Contains `UseOrleansClient()` extension method for client configuration
+
+**OrleansVoting.AppHost** - Aspire orchestration
+- Configures separate silo and web tiers
+- Redis for clustering and persistence
+- Entry point: `AppHost.cs`
+- Deploys 3 Silo replicas (grain hosting) + 3 WebApp replicas (HTTP frontend)
 
 ### Orleans Grain Model
 
@@ -75,7 +107,7 @@ The application uses three grain types to implement the voting system:
 
 - **Clustering**: Orleans silo discovery and membership managed via Redis (Aspire hosting)
 - **Grain Storage**: Poll state persisted to Redis with provider name "votes"
-- **Connection**: Injected via `builder.AddKeyedRedisClient("voting-redis")` in Service project
+- **Connection**: Injected via `builder.AddKeyedRedisClient("voting-redis")` in Silo and WebApp projects
 
 ### Key Orleans Patterns
 
@@ -87,6 +119,55 @@ The application uses three grain types to implement the voting system:
 ### Aspire Integration Points
 
 - `builder.AddServiceDefaults()` - applies telemetry, health checks, service discovery
-- `builder.UseOrleans()` - configures Orleans from Aspire service configuration
+- `builder.UseOrleans()` - configures Orleans silo hosting (Silo project only)
+- `builder.UseOrleansClient()` - configures Orleans client (WebApp project)
 - `builder.AddKeyedRedisClient()` - retrieves Redis connection from Aspire orchestration
 - `app.MapDefaultEndpoints()` - exposes health check endpoints in development
+
+## Testing Strategy
+
+### Grain Unit Tests (OrleansVoting.Tests/Grains/)
+- Test grain behavior using TestCluster
+- Verify business logic in isolation
+- Test persistence, observers, throttling
+- Use real Orleans TestCluster (not mocks)
+
+### Service Layer Tests (OrleansVoting.Tests/Services/)
+- Test PollService with mocked grains
+- Verify service layer orchestration
+- Fast execution with Moq
+
+### Component Tests (OrleansVoting.Tests.UI/Components/)
+- Test Blazor components using bUnit
+- Verify UI behavior with mocked services
+- Test user interactions and error handling
+
+### Integration Tests (OrleansVoting.Tests/Integration/)
+- End-to-end tests with real Orleans cluster
+- Verify full system behavior
+- Test cross-grain interactions
+
+### Hosting Tests (OrleansVoting.Tests/Hosting/)
+- Verify silo can start and host grains
+- Verify client can connect to cluster
+- Test separate silo/client architecture
+
+## Architecture Notes
+
+### Client vs Silo
+- **Silo** hosts grains, uses `builder.UseOrleans()`
+- **Client** connects to cluster, uses `builder.UseOrleansClient()`
+- WebApp is client-only, doesn't host grains
+- Grains project only referenced by Silo, not by WebApp
+
+### Scaling
+- Scale Silo for computation/grain workload
+- Scale WebApp for HTTP traffic
+- Independent scaling per tier
+- Both tiers connect to same Redis cluster
+
+### Testing Grains
+- Use TestCluster for grain tests
+- Don't mock grains in grain tests
+- Mock grains in service/component tests
+- Integration tests verify silo/client separation
