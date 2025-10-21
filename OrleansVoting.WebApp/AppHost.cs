@@ -23,6 +23,9 @@ builder.UseOrleansClient(client =>
 	{
 		o.ConfigurationOptions = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
 	});
+
+	// Enable distributed tracing
+	client.AddActivityPropagation();
 });
 
 // Add services to the container.
