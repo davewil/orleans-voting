@@ -26,12 +26,19 @@ else if (!_voted)
 	<h1>@_results.Question</h1>
 	<br />
 	<div>
-		@foreach (var (index, option) in _results.Options.Select((value, index) => (index, value)))
+		@if (_results.Options is not null)
 		{
-			<div class="input-group mb-3">
-				<button class="btn btn-outline-secondary" type="button" id="button-add" @onclick="@(e => VoteForOption(index))">👍</button>
-				<span class="input-group-text col-9">@(option.Option)</span>
-			</div>
+			@foreach (var (index, option) in _results.Options.Select((value, index) => (index, value)))
+			{
+				<div class="input-group mb-3">
+					<button class="btn btn-outline-secondary" type="button" id="button-add" @onclick="@(e => VoteForOption(index))">👍</button>
+					<span class="input-group-text col-9">@(option.Option)</span>
+				</div>
+			}
+		}
+		else
+		{
+			<div class="alert alert-warning">No options available for this poll.</div>
 		}
 	</div>
 	<br />

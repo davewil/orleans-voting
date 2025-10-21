@@ -11,10 +11,33 @@ public class PollGrain(
 {
     private readonly ObserverManager<IPollWatcher> _pollWatchers = new(TimeSpan.FromMinutes(1), pollLogger);
 
-    public Task<PollState> GetCurrentResults() => Task.FromResult(state.State);
+    public Task<PollState> GetCurrentResults()
+    {
+        // Validate grain state before returning
+        if (state.State.Options is null)
+        {
+            throw new InvalidOperationException("Poll state is corrupted - options are null");
+        }
+
+        return Task.FromResult(state.State);
+    }
 
     public async Task CreatePoll(PollState initialState)
     {
+        // Validate the initial state
+        ArgumentNullException.ThrowIfNull(initialState);
+        ArgumentNullException.ThrowIfNull(initialState.Options);
+
+        if (string.IsNullOrWhiteSpace(initialState.Question))
+        {
+            throw new ArgumentException("Poll question cannot be empty", nameof(initialState));
+        }
+
+        if (initialState.Options.Count == 0)
+        {
+            throw new ArgumentException("Poll must have at least one option", nameof(initialState));
+        }
+
         // Set the state and persist it
         state.State = initialState;
         await state.WriteStateAsync();
@@ -22,6 +45,12 @@ public class PollGrain(
 
     public async Task<PollState> AddVote(int optionId)
     {
+        // Validate grain state
+        if (state.State.Options is null)
+        {
+            throw new InvalidOperationException("Poll state is corrupted - options are null");
+        }
+
         // Perform input validation
         var options = state.State.Options;
         if (optionId < 0 || optionId >= options.Count)
