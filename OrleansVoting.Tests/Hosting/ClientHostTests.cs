@@ -40,10 +40,10 @@ public class ClientHostTests
         // Act
         var grainFactory = clientHost.Services.GetRequiredService<IGrainFactory>();
         var grain = grainFactory.GetGrain<IPollGrain>("test-client-grain");
-        var state = new PollState 
-        { 
-            Question = "Test?", 
-            Options = new List<(string, int)>() 
+        var state = new PollState
+        {
+            Question = "Test?",
+            Options = new List<(string, int)> { ("Option A", 0) }
         };
         await grain.CreatePoll(state);
         var result = await grain.GetCurrentResults();

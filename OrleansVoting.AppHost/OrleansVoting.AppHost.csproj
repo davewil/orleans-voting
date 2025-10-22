@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OrleansVoting.WebApp\OrleansVoting.WebApp.csproj" />
     <ProjectReference Include="..\OrleansVoting.Silo\OrleansVoting.Silo.csproj" />
+    <ProjectReference Include="..\OrleansVoting.Api\OrleansVoting.Api.csproj" />
   </ItemGroup>
 
 </Project>

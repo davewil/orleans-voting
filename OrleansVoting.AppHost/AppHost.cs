@@ -20,4 +20,12 @@ builder.AddProject<Projects.OrleansVoting_WebApp>("voting-web")
     .WaitFor(silo)
     .WithExternalHttpEndpoints();
 
+// REST API (Orleans client - for non-.NET clients)
+builder.AddProject<Projects.OrleansVoting_Api>("voting-api")
+    .WithReference(redis)
+    .WithEnvironment("Orleans__ClusterOptions__ClusterId", clusterId)
+    .WithEnvironment("Orleans__ClusterOptions__ServiceId", serviceId)
+    .WaitFor(silo)
+    .WithExternalHttpEndpoints();
+
 builder.Build().Run();

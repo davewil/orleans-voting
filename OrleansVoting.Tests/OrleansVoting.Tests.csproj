@@ -11,6 +11,7 @@
     <PackageReference Include="bUnit" Version="1.40.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="FluentAssertions" Version="8.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="9.2.1" />
     <PackageReference Include="Microsoft.Orleans.TestingHost" Version="9.2.1" />
@@ -27,6 +28,7 @@
     <ProjectReference Include="..\OrleansVoting.WebApp\OrleansVoting.WebApp.csproj" />
     <ProjectReference Include="..\OrleansVoting.Contracts\OrleansVoting.Contracts.csproj" />
     <ProjectReference Include="..\OrleansVoting.Grains\OrleansVoting.Grains.csproj" />
+    <ProjectReference Include="..\OrleansVoting.Api\OrleansVoting.Api.csproj" />
   </ItemGroup>
 
 </Project>

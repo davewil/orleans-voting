@@ -58,7 +58,7 @@ public class SiloHostTests
         var state = new PollState
         {
             Question = "Test?",
-            Options = new List<(string, int)>()
+            Options = new List<(string, int)> { ("Option A", 0) }
         };
         await grain.CreatePoll(state);
         var result = await grain.GetCurrentResults();
