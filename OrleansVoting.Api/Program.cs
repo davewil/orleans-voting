@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Orleans;
-using OrleansVoting.Api;
 using OrleansVoting.Contracts.Grains;
 using OrleansVoting.Contracts.Exceptions;
 
@@ -41,9 +40,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Register client ID provider for request identification
-builder.Services.AddSingleton<IClientIdProvider, IpAddressClientIdProvider>();
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -61,12 +57,11 @@ var polls = app.MapGroup("/api/polls");
 polls.MapPost("/", async (
     [FromBody] CreatePollRequest request,
     [FromServices] IGrainFactory grainFactory,
-    [FromServices] IClientIdProvider clientIdProvider,
     HttpContext context) =>
 {
     try
     {
-        var clientId = clientIdProvider.GetClientId(context);
+        var clientId = GetClientId(context);
         var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
 
         var pollId = await userGrain.CreatePoll(new PollState
@@ -90,10 +85,9 @@ polls.MapPost("/", async (
 polls.MapGet("/{pollId}", async (
     string pollId,
     [FromServices] IGrainFactory grainFactory,
-    [FromServices] IClientIdProvider clientIdProvider,
     HttpContext context) =>
 {
-    var clientId = clientIdProvider.GetClientId(context);
+    var clientId = GetClientId(context);
     var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
 
     var (results, voted) = await userGrain.GetPollResults(pollId);
@@ -109,12 +103,11 @@ polls.MapPost("/{pollId}/vote", async (
     string pollId,
     [FromBody] VoteRequest request,
     [FromServices] IGrainFactory grainFactory,
-    [FromServices] IClientIdProvider clientIdProvider,
     HttpContext context) =>
 {
     try
     {
-        var clientId = clientIdProvider.GetClientId(context);
+        var clientId = GetClientId(context);
         var userGrain = grainFactory.GetGrain<IUserAgentGrain>(clientId);
 
         var result = await userGrain.AddVote(pollId, request.OptionIndex);
@@ -132,6 +125,13 @@ polls.MapPost("/{pollId}/vote", async (
 });
 
 app.Run();
+
+static string GetClientId(HttpContext context)
+{
+    // Use IP address as client identifier
+    // In production, you might use authenticated user ID or session cookies
+    return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+}
 
 // DTOs
 public record CreatePollRequest(string Question, List<string> Options);

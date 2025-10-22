@@ -1,4 +1,6 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -13,18 +15,32 @@ using System.Net.Http.Json;
 namespace OrleansVoting.Tests.Api;
 
 /// <summary>
-/// Test implementation that returns a fixed client ID for test isolation.
+/// Startup filter that adds middleware to set a fixed IP address for testing.
+/// This allows each test to have a unique client ID without modifying production code.
 /// </summary>
-public class TestClientIdProvider : OrleansVoting.Api.IClientIdProvider
+public class TestIpAddressStartupFilter : IStartupFilter
 {
-    private readonly string _clientId;
+    private readonly string _ipAddress;
 
-    public TestClientIdProvider(string clientId)
+    public TestIpAddressStartupFilter(string ipAddress)
     {
-        _clientId = clientId;
+        _ipAddress = ipAddress;
     }
 
-    public string GetClientId(HttpContext context) => _clientId;
+    public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
+    {
+        return app =>
+        {
+            app.Use(async (context, next) =>
+            {
+                // Set RemoteIpAddress to test IP for isolation
+                context.Connection.RemoteIpAddress = IPAddress.Parse(_ipAddress);
+                await next();
+            });
+
+            next(app);
+        };
+    }
 }
 
 public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
@@ -37,8 +53,10 @@ public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
     public PollsApiTests(TestClusterFixture fixture)
     {
         _cluster = fixture.Cluster;
-        // Each test instance gets a unique client ID to prevent throttling conflicts
-        _testClientId = Guid.NewGuid().ToString();
+        // Each test instance gets a unique IP address to prevent throttling conflicts
+        // Use 127.0.0.x where x is a random number to ensure uniqueness
+        var random = new Random().Next(1, 255);
+        _testClientId = $"127.0.0.{random}";
     }
 
     public async Task InitializeAsync()
@@ -55,6 +73,8 @@ public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
                 // Override Orleans client with test cluster client
                 builder.ConfigureTestServices(services =>
                 {
+                    // Add startup filter to inject middleware that sets unique IP address
+                    services.AddSingleton<IStartupFilter>(new TestIpAddressStartupFilter(_testClientId));
                     // Remove ALL IHostedService registrations to prevent Orleans client from starting
                     var hostedServices = services
                         .Where(d => d.ServiceType == typeof(Microsoft.Extensions.Hosting.IHostedService))
@@ -81,14 +101,6 @@ public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
                     // Add test cluster client as both IGrainFactory and IClusterClient
                     services.AddSingleton<IGrainFactory>(_cluster.Client);
                     services.AddSingleton<IClusterClient>(_cluster.Client);
-
-                    // Replace client ID provider with test implementation for isolation
-                    var clientIdProviderDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(OrleansVoting.Api.IClientIdProvider));
-                    if (clientIdProviderDescriptor != null)
-                    {
-                        services.Remove(clientIdProviderDescriptor);
-                    }
-                    services.AddSingleton<OrleansVoting.Api.IClientIdProvider>(new TestClientIdProvider(_testClientId));
                 });
             });
 
