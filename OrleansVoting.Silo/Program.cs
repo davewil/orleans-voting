@@ -37,8 +37,6 @@ builder.UseOrleans(silo =>
 		o.ConfigurationOptions = redisOptions;
 	});
 
-	// Enable distributed tracing
-	silo.AddActivityPropagation();
 });
 
 var app = builder.Build();

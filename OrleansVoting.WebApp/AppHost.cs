@@ -1,4 +1,5 @@
-﻿using OrleansVoting.Data;
+﻿using Microsoft.Extensions.Hosting;
+using OrleansVoting.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +7,8 @@ builder.AddServiceDefaults();
 builder.AddKeyedRedisClient("voting-redis");
 
 // Configure as Orleans client (no grain hosting)
-builder.UseOrleansClient(client =>
+// Uses ServiceDefaults extension method which automatically adds ActivityPropagation for telemetry
+builder.ConfigureOrleansClient(client =>
 {
 	var clusterId = builder.Configuration["Orleans:ClusterOptions:ClusterId"] ?? "voting-cluster";
 	var serviceId = builder.Configuration["Orleans:ClusterOptions:ServiceId"] ?? "voting-app";
@@ -23,9 +25,6 @@ builder.UseOrleansClient(client =>
 	{
 		o.ConfigurationOptions = StackExchange.Redis.ConfigurationOptions.Parse(redisConn);
 	});
-
-	// Enable distributed tracing
-	client.AddActivityPropagation();
 });
 
 // Add services to the container.

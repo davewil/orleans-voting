@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Net.Http;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 namespace Microsoft.Extensions.Hosting;
@@ -36,36 +40,80 @@ public static class Extensions
 
     public static IHostApplicationBuilder ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
     {
+        var resourceBuilder = ResourceBuilder.CreateDefault()
+            .AddService(serviceName: builder.Environment.ApplicationName);
+
+        // Check if OTLP endpoint is configured
+        var otlpEndpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
+
+        // Configure SSL bypass for development HTTPS with self-signed certificates
+        if (!string.IsNullOrWhiteSpace(otlpEndpoint) && builder.Environment.IsDevelopment())
+        {
+            // Allow untrusted certificates for localhost gRPC connections in development
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+
+            builder.Services.Configure<OtlpExporterOptions>(otlpOptions =>
+            {
+                otlpOptions.HttpClientFactory = () => new HttpClient(new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                });
+            });
+        }
+
+        // Setup logging to be exported via OpenTelemetry
         builder.Logging.AddOpenTelemetry(logging =>
         {
             logging.IncludeFormattedMessage = true;
             logging.IncludeScopes = true;
+            logging.SetResourceBuilder(resourceBuilder);
+
+            // Add OTLP exporter for logging if endpoint is configured
+            if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+            {
+                logging.AddOtlpExporter();
+            }
         });
 
-        builder.Services.AddOpenTelemetry()
-            .WithLogging()
-            .WithMetrics(metrics =>
+        var otel = builder.Services.AddOpenTelemetry();
+
+        otel.WithMetrics(metrics =>
+        {
+            metrics.SetResourceBuilder(resourceBuilder);
+            metrics.AddAspNetCoreInstrumentation()
+                   .AddHttpClientInstrumentation()
+                   .AddRuntimeInstrumentation()
+                   .AddMeter("Microsoft.Orleans");
+
+            // Add OTLP exporter for metrics if endpoint is configured
+            if (!string.IsNullOrWhiteSpace(otlpEndpoint))
             {
-                metrics.AddAspNetCoreInstrumentation()
-                       .AddHttpClientInstrumentation()
-                       .AddRuntimeInstrumentation()
-                       .AddMeter("Microsoft.Orleans");
-            })
-            .WithTracing(tracing =>
+                metrics.AddOtlpExporter();
+            }
+        });
+
+        otel.WithTracing(tracing =>
+        {
+            tracing.SetResourceBuilder(resourceBuilder);
+            tracing
+                .AddSource(builder.Environment.ApplicationName)
+                .AddAspNetCoreInstrumentation(tracing =>
+                    // Don't trace requests to the health endpoint to avoid filling the dashboard with noise
+                    tracing.Filter = httpContext =>
+                        !(httpContext.Request.Path.StartsWithSegments(HealthEndpointPath)
+                          || httpContext.Request.Path.StartsWithSegments(AlivenessEndpointPath))
+                )
+                .AddHttpClientInstrumentation()
+                .AddSource("Microsoft.Orleans.Application")
+                .AddSource("Microsoft.Orleans.Runtime");
+
+            // Add OTLP exporter for tracing if endpoint is configured
+            if (!string.IsNullOrWhiteSpace(otlpEndpoint))
             {
-                tracing
-                    .AddSource(builder.Environment.ApplicationName)
-                    .AddAspNetCoreInstrumentation(tracing =>
-                        // Don't trace requests to the health endpoint to avoid filling the dashboard with noise
-                        tracing.Filter = httpContext =>
-                            !(httpContext.Request.Path.StartsWithSegments(HealthEndpointPath)
-                              || httpContext.Request.Path.StartsWithSegments(AlivenessEndpointPath))
-                    )
-                    .AddHttpClientInstrumentation()
-                    .AddSource("Microsoft.Orleans.Application")
-                    .AddSource("Microsoft.Orleans.Runtime");
-            })
-            .UseOtlpExporter(); // Export logs, metrics, and traces via OTLP
+                tracing.AddOtlpExporter();
+            }
+        });
 
         return builder;
     }
