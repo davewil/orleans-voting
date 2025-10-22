@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,21 @@ using System.Net;
 using System.Net.Http.Json;
 
 namespace OrleansVoting.Tests.Api;
+
+/// <summary>
+/// Test implementation that returns a fixed client ID for test isolation.
+/// </summary>
+public class TestClientIdProvider : OrleansVoting.Api.IClientIdProvider
+{
+    private readonly string _clientId;
+
+    public TestClientIdProvider(string clientId)
+    {
+        _clientId = clientId;
+    }
+
+    public string GetClientId(HttpContext context) => _clientId;
+}
 
 public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
 {
@@ -65,13 +81,18 @@ public class PollsApiTests : IClassFixture<TestClusterFixture>, IAsyncLifetime
                     // Add test cluster client as both IGrainFactory and IClusterClient
                     services.AddSingleton<IGrainFactory>(_cluster.Client);
                     services.AddSingleton<IClusterClient>(_cluster.Client);
+
+                    // Replace client ID provider with test implementation for isolation
+                    var clientIdProviderDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(OrleansVoting.Api.IClientIdProvider));
+                    if (clientIdProviderDescriptor != null)
+                    {
+                        services.Remove(clientIdProviderDescriptor);
+                    }
+                    services.AddSingleton<OrleansVoting.Api.IClientIdProvider>(new TestClientIdProvider(_testClientId));
                 });
             });
 
         _client = _factory.CreateClient();
-
-        // Add unique client ID header to all requests for test isolation
-        _client.DefaultRequestHeaders.Add("X-Client-Id", _testClientId);
 
         await Task.CompletedTask;
     }
